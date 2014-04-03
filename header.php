@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<?php
+include("BaseXClient.php");
+include 'database.php';
+isConnect_db();
+?>
+
+
 <html lang="en">
   <head>
     <meta charset="utf-8">

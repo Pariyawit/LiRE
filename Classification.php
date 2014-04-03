@@ -36,8 +36,8 @@
 					<table class="table table-bordered table-condensed table-hover">
 					<thead>
 						<tr>
-							<th class="col-sm-4">Code</th>
-							<th class="col-sm-8">Name</th>
+							<th class="col-sm-2" style="text-align:center">Code</th>
+							<th class="col-sm-10" style="text-align:center">Name</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -45,8 +45,10 @@
 						$results = search_by_class($_GET['seach_class']);
 						foreach ($results as $result) {
 							echo "<tr>";
-							echo "<td>".$result[0]."</td>";
-							echo "<td>".$result[1]."</td>";
+							echo '<td style="padding-left:40px">'.$result[1].'</td>';
+							echo "<td>";
+							echo '<a href="book.php?ref='.$result[0].'"><div>';
+							echo $result[2]."</div></a></td>";
 							echo "</tr>";
 						}
 					?>

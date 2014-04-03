@@ -1,42 +1,46 @@
 <?php
-/*
- * This example shows how new databases can be created.
- *
- * Documentation: http://docs.basex.org/wiki/Clients
- *
- * (C) BaseX Team 2005-12, BSD License
- */
-include("BaseXClient.php");
-try {
-	if(!isset($_SESSION['session'])){
-		session_start();
-		// create session
-		$_SESSION['session'] = new Session("localhost", "1984", "admin", "admin");
-		
-		// create new database
-		$path = realpath(dirname(__FILE__));
+$session = new Session("localhost", "1984", "admin", "admin");
+function connect_db(){
+	try {
+			echo "Connecting to Database...";
+			// create session
+			if(!isset($session)){
+				$session = new Session("localhost", "1984", "admin", "admin");
+			}
+			
+			// create new database
+			$path = realpath(dirname(__FILE__));
 
-		$file = $path."/extraction_brest_edit.xml";
-		
-		$_SESSION['session']->execute('CREATE DB extraction '.$file);
+			$file = $path."/extraction_brest_edit.xml";
+			
+			$session->execute('CREATE DB extraction '.$file);
 
-		print $_SESSION['session']->info();		
+			print $session->info();		
+			header('Location: ' . $_SERVER['HTTP_REFERER']);
+		}
 
+	/*
+		// drop database
+		$session->execute("drop db extraction");
+
+		// close session
+		$session->close();
+		print "DONE";
+	*/
+	catch (Exception $e) {
+		// print exception
+		print $e->getMessage();
 	}
+}
 
-/*
-	// drop database
-	$session->execute("drop db extraction");
-
-	// close session
-	$session->close();
-	print "DONE";
-*/
-
-} 
-catch (Exception $e) {
-	// print exception
-	print $e->getMessage();
+function isConnect_db(){
+	if(!isset($session)){
+		$session = new Session("localhost", "1984", "admin", "admin");
+	}
+	$session->execute('CHECK extraction');
+	if(strpos($session->info(),'create')){
+		connect_db();
+	}
 }
 
 ?>

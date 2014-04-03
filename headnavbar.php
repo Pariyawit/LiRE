@@ -41,9 +41,8 @@ $menus = ['Index','Classification'];
 						</li-->
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="../navbar/">Default</a></li>
-						<li class="active"><a href="./">Static top</a></li>
-						<li><a href="../navbar-fixed-top/">Fixed top</a></li>
+						<!--li><a href="database.php">Connect to Database</a></li>
+						<li class="active"><a>Static top</a></li-->
 					</ul>
 				</div><!--/.nav-collapse -->
 			</div>

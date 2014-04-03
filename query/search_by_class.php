@@ -6,13 +6,12 @@
  *
  * (C) BaseX Team 2005-12, BSD License
  */
-include("BaseXClient.php");
-
-if(!isset($_SESSION['session'])){
-	session_start();
-}
+//include("BaseXClient.php");
 
 function search_by_class($num){
+	if(!isset($session)){
+		$session = new Session("localhost", "1984", "admin", "admin");
+	}
 	if($num[0] == '0'){
 		$num = substr($num,1);
 	}
@@ -25,9 +24,11 @@ function search_by_class($num){
 						where starts-with($record/marcxml:subfield[@code="k"], "'.$num.'")
 							and $record/marcxml:subfield[@code="e"]="BSTB"
 						order by $record/marcxml:subfield[@code="k"]
-						return ($record/marcxml:subfield[@code="k"],$record/../marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"],"$")';
+						return ($record/../marcxml:controlfield[@tag="001"]/text(),
+								$record/marcxml:subfield[@code="k"]/text(),
+								$record/../marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"]/text(),"$")';
 						//return ($record/marcxml:subfield[@code="k"],$record/marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"])';
-			$session = new Session("localhost", "1984", "admin", "admin");
+			//$session = new Session("localhost", "1984", "admin", "admin");
 			$session->execute('OPEN extraction');
 			$query = $session->query($input);
 			$results = array();
@@ -36,7 +37,7 @@ function search_by_class($num){
 			while($query->more()){
 				$x = $query->next();
 				if($x == '$'){
-					array_push($results,$tmp);
+					if($tmp !== end($results))array_push($results,$tmp);
 					$tmp = array();
 					continue;
 				}
