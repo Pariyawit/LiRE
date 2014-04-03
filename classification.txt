@@ -1,0 +1,101 @@
+00 - GENERALITES
+00.1 - Généralités sur les sciences
+00.2 - Enseignement - Recherche
+00.3 - Linguistique
+00.4 - Techniques documentaires
+01 - MATHEMATIQUES
+01.1 -  Mathématiques pour application à une autre discipline
+01.2 - Fondement des mathématiques
+01.3 - Algèbre et théorie des nombres
+01.4 - Géométrie
+01.5 - Topologie
+01.6 - Analyse
+01.7 - Analyse numérique - Recherche opérationnelle
+01.8 - Probabilités, statistiques et applications
+01.9 - Autres sujets
+02 - INFORMATIQUE ET AUTOMATIQUE
+02.1 - Informatique théorique
+02.2 - Programmation - Logiciels
+02.3 - Informatique répartie et temps partagé
+02.4 - Matériel
+02.5 - Applications
+02.6 - Théorie des systèmes / Automatique et informatique industrielle
+02.7 - Intelligence artificielle
+03 - PHYSIQUE
+03.1 - Physique théorique
+03.2 - Physique atomique et moléculaire - Physique nucléaire
+03.3 - Electricité - Magnétisme - Electromagnétisme
+03.4 - Optique
+03.5 - Acoustique - Electroacoustique
+03.6 - Thermodynamique
+03.7 - Mécanique des solides et des fluides
+03.8 - Physique de la matière condensée / Physique des gaz et des plasmas
+03.9 - Sciences et techniques de la terre et de l'univers
+04 - CHIMIE ET SCIENCES DE LA VIE
+04.1 - Chimie générale - Chimie physique
+04.2 - Chimie minérale
+04.3 - Chimie organique
+04.4 - Chimie analytique
+04.5 - Génie chimique et chimie industrielle
+04.6 - Sciences de la vie
+05 - ELECTRONIQUE ET MICROELECTRONIQUE / ELECTROTECHNIQUE - ENERGIE
+05.1 - Electronique générale
+05.2 - Electronique des semiconducteurs, microélectronique et optoélectronique
+05.3 - Circuits électriques, filtres, lignes de transmission
+05.4 - Affichage
+05.5 - Applications diverses de l'electronique
+05.6 - Electrotechnique - Energie électrique
+06 - TECHNOLOGIES ET TECHNIQUES DE L'INGENIEUR
+06.1- Métallurgie - Matériaux, fabrication et traitements
+06.2 - Dessin industriel
+06.3 - Instrumentation et mesures
+06.4 - Fiabilité - sûreté de fonctionnement
+06.5 - Sécurité - Protection de l'environnement - Pollution
+06.6 - Manutention - Transports - Art militaire
+06.7 - Bâtiment - Travaux publics
+06.8 - Techniques et machines diverses
+06.9 - Industries diverses
+07 - THEORIE DE L'INFORMATION - THEORIE DU SIGNAL ET DES COMMUNICATIONS - TRAITEMENT DU SIGNAL ET DES IMAGES
+07.1 - Théorie de l'information
+07.2 - Théorie du signal, des communications et du bruit
+07.3 - Traitement du signal
+07.4 - Compatibilité électromagnétique
+08 - TELECOMMUNICATIONS - VIDEOCOMMUNICATIONS AUDIOVISUEL
+08.1 - Généralités sur les télécommunications
+08.2 - Réseaux et services de télécommunications
+08.3 - Réseaux de communication de données ou téléinformatiques - RNIS bande étroite et large bande
+08.4 - Radiocommunication (sauf radiodiffusion)
+08.5 - Radiorepérage et radionavigation
+08.6 - Radiodiffusion sonore et de télévision - Audiovisuel - Vidéocommunication
+08.7 - Réseaux sans fil et mobiles / Wireless and mobile networks
+09 - SCIENCES ECONOMIQUES
+09.1 - Théorie économique
+09.2 - Microéconomie
+09.3 - Macroéconomie 
+09.4 - Economie internationale
+09.5 - Activités économiques (industrie et services)
+10 GESTION
+10.1 - Acteurs économiques (entreprises, fonction publique, associations …)
+10.2 - Management
+10.3 - Marketing
+10.4 - Finances (Gestion financière)
+10.5 - Ressources humaines
+10.6 - Gestion industrielle
+10.7 - Entrepreneuriat
+11 - DROIT
+11.1 - Droit public
+11.2 - Droit fiscal
+11.3 - Droit privé
+11.4 - Droit social
+11.5 - Droit communautaire
+11.6 - Droit des Technologies de l'Information et de la Communication (TIC)
+11.7 - Droits sectoriels
+12 – SCIENCES HUMAINES
+12.1 - Sociologie
+12.2 - Psychologie
+12.3 - Philosophie
+12.4 - Littérature  et œuvres cinématographiques
+12.5 - Civilisation, histoire et problèmes contemporains / Anthropologie
+12.6 - Géographie
+12.7 - Art et culture
+
