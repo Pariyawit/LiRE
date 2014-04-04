@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <?php
-include("BaseXClient.php");
+
+if(!class_exists('Session')) {
+    include 'BaseXClient.php';
+}
+
 include 'database.php';
 isConnect_db();
 ?>

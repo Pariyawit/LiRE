@@ -1,6 +1,5 @@
 <?php
 
-//$menus = ['Index','Classification'];
 $menus = array('Index','Classification');
 
 ?>

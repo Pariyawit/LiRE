@@ -1,4 +1,10 @@
 <?php
+
+
+if(!class_exists('Session')) {
+	include 'BaseXClient.php';
+}
+
 $session = new Session("localhost", "1984", "admin", "admin");
 function connect_db(){
 	try {
