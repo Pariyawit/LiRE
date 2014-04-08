@@ -1,7 +1,7 @@
 <?php 
 	include 'header.php';
 	include 'class.php';
-	include 'query/search_by_class.php';
+	include 'query/query_func.php';
 	$current_page = 'Classification';
 ?>
 	<body>
@@ -16,13 +16,22 @@
 						<div class="col-sm-8">
 							<select class="form-control" name="seach_class">
 								<option>--SELECT CATEGORY--</option>
-								<?php foreach($class as $item): ?>
-									<?php if (strpos($item[0],'.') == FALSE):?>
-										<option value=<?php echo '"'.$item[0].'"'; ?> > <?php echo $item[0]." -- ".$item[1]; ?></option>
-									<?php else: ?>
-										<option value=<?php echo '"'.$item[0].'"'; ?> > <?php echo "&nbsp;&nbsp;&nbsp;".$item[0]." -- ".$item[1]; ?></option>
-									<?php endif; ?>
-								<?php endforeach;?>
+								<?php foreach($class as $item){
+									if (strpos($item[0],'.') == FALSE){
+										echo '<option value="'.$item[0].'"';
+										if (isset($_GET['seach_class']) && $_GET['seach_class']==$item[0]) echo ' selected ';
+										echo '>';
+										echo $item[0].' -- '.$item[1].'</option>'; 
+									}
+									else{
+										echo '<option value="'.$item[0].'"';
+										if (isset($_GET['seach_class']) && $_GET['seach_class']==$item[0]) echo ' selected ';
+										echo '>';
+										echo '&nbsp;&nbsp;&nbsp;&nbsp;'.$item[0].' -- '.$item[1].'</option>'; 
+									}
+
+								}
+								?>
 							</select>
 						</div>
 						<div class="col-sm-2">
@@ -47,7 +56,7 @@
 							echo "<tr>";
 							echo '<td style="padding-left:40px">'.$result[1].'</td>';
 							echo "<td>";
-							echo '<a href="book.php?ref='.$result[0].'"><div>';
+							echo '<a href="bookdetail.php?ref='.$result[0].'"><div>';
 							echo $result[2]."</div></a></td>";
 							echo "</tr>";
 						}

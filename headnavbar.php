@@ -1,6 +1,7 @@
 <?php
 
-$menus = array('Index','Classification');
+$menus = array('Home','Classification','Book Detail');
+$files = array('index','classification','bookdetail')
 
 ?>
 
@@ -20,9 +21,9 @@ $menus = array('Index','Classification');
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
 						<?php
-							foreach ($menus as $menu) {
-								if($menu == $current_page) echo '<li class="active"><a href="'.$menu.'.php">'.$menu.'</a></li>';
-								else echo '<li><a href="'.$menu.'.php">'.$menu.'</a></li>';
+							for ($i=0 ;$i<count($files);$i=$i+1) {
+								if($menus[$i] == $current_page) echo '<li class="active"><a href="'.$files[$i].'.php">'.$menus[$i].'</a></li>';
+								else echo '<li><a href="'.$files[$i].'.php">'.$menus[$i].'</a></li>';
 							}
 
 						?>
@@ -41,8 +42,10 @@ $menus = array('Index','Classification');
 						</li-->
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<!--li><a href="database.php">Connect to Database</a></li>
-						<li class="active"><a>Static top</a></li-->
+						<?php
+							if($current_page == 'Data Management') echo '<li class="active"><a href="data_manage.php">Data Management</a></li>';
+							else echo '<li><a href="data_manage.php">Data Management</a></li>';
+						?>
 					</ul>
 				</div><!--/.nav-collapse -->
 			</div>

@@ -6,6 +6,7 @@ if(!class_exists('Session')) {
 }
 
 $session = new Session("localhost", "1984", "admin", "admin");
+
 function connect_db(){
 	try {
 			echo "Connecting to Database...";
@@ -18,8 +19,10 @@ function connect_db(){
 			$path = realpath(dirname(__FILE__));
 
 			$file = $path."/extraction_brest_edit.xml";
-			
 			$session->execute('CREATE DB extraction '.$file);
+
+			$file = $path."/historique_escap.xml";
+			$session->execute('CREATE DB historique '.$file);
 
 			print $session->info();		
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
