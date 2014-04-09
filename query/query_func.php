@@ -53,14 +53,21 @@ function search_by_class($num){
 function query_book($ref){
 	try {
 		$input = 'declare namespace marcxml = "http://www.loc.gov/MARC21/slim";
-				for $record in //marcxml:record/*
-				where $record/../marcxml:controlfield[@tag="001"]= "'.$ref.'"
-				and $record/marcxml:subfield[@code="e"]="BSTB"
-				order by $record/marcxml:subfield[@code="k"]
-				return (
+			for $record in //marcxml:record/*
+			where $record/../marcxml:controlfield[@tag="001"]= "8491"
+			and $record/marcxml:subfield[@code="e"]="BSTB"
+			order by $record/marcxml:subfield[@code="k"]
+			return (
 				$record/../marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"]/text(),
-				$record/marcxml:subfield[@code="k"]/text(),
-				$record/../marcxml:datafield[@tag="210"]/marcxml:subfield[@code="c"]/text(),"$")';
+				$record/../marcxml:datafield[@tag="200"]/marcxml:subfield[@code="f"]/text(),
+				$record/../marcxml:datafield[@tag="200"]/marcxml:subfield[@code="e"]/text(),
+				$record/../marcxml:datafield[@tag="205"]/marcxml:subfield[@code="a"]/text(),
+				$record/../marcxml:datafield[@tag="210"]/marcxml:subfield[@code="a"]/text(),
+				$record/../marcxml:datafield[@tag="210"]/marcxml:subfield[@code="c"]/text(),
+				$record/../marcxml:datafield[@tag="210"]/marcxml:subfield[@code="d"]/text(),
+				$record/../marcxml:datafield[@tag="995"]/marcxml:subfield[@code="f"]/text(),
+				$record/../marcxml:datafield[@tag="995"]/marcxml:subfield[@code="k"]/text(),
+				"$")';
 					//return ($record/marcxml:subfield[@code="k"],$record/marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"])';
 		//$session = new Session("localhost", "1984", "admin", "admin");
 		$results = query($input,'extraction');
