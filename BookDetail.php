@@ -15,10 +15,8 @@
 
 			<!-- Main component for a primary marketing message or call to action -->
 			<div class="jumbotron">
-				<h1>Book Detail</h1>
-				<p>
 				<?php
-					echo $_GET['ref'].'<br>';
+					//echo $_GET['ref'].'<br>';
 					if($details[0]=="no") $dOffset = 1; // check if the book description field is available?
 					else $dOffset = 0; 
 					if($details[1]=="no") $eOffset = 1; // check if the book edition field is available?
@@ -32,10 +30,17 @@
 					$book_pubname = $details[8 - $dOffset - $eOffset];
 					$book_pubplace = $details[9 - $dOffset - $eOffset];
 					$book_pubdate = $details[10 - $dOffset - $eOffset];
+				?>
+				<h2>
+				<?php 
 					echo $book_titre."<br>";
+				?>
+				</h2>
+				<p>
+				<?php
 					if($details[0]=="yes") echo $book_description."<br>";
-					echo $book_author."<br>";	
 					echo $book_class." / ".$book_barcode."<br>";
+					echo "Author : ".$book_author."<br>";	
 					if($details[1]=="yes") echo "Edition : ".$book_edition. "<br>";
 					echo "Publication : ".$book_pubname.", ".$book_pubplace.", ".$book_pubdate."<br>";	
 					echo 'This book has been loan '.$loan_num.' time(s)';
