@@ -41,9 +41,9 @@
 					if($details[0]=="yes") echo $book_description."<br>";
 					echo $book_class." / ".$book_barcode."<br>";
 					echo "Author : ".$book_author."<br>";	
-					if($details[1]=="yes") echo "Edition : ".$book_edition. "<br>";
-					echo "Publication : ".$book_pubname.", ".$book_pubplace.", ".$book_pubdate."<br>";	
-					echo 'This book has been loan '.$loan_num.' time(s)';
+						if($details[1]=="yes") echo "Edition : ".$book_edition. "<br>";
+						echo "Publication : ".$book_pubname.", ".$book_pubplace.", ".$book_pubdate."<br>";	
+						echo 'This book has been loan '.$loan_num.' time(s)';
 				?>
 				</p>
 			</div>
