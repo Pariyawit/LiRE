@@ -24,6 +24,9 @@ function connect_db(){
 			$file = $path."/historique_escap.xml";
 			$session->execute('CREATE DB historique '.$file);
 
+			$file = $path."/toploan.xml";
+			$session->execute('CREATE DB toploan'.$file);
+
 			print $session->info();		
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
 		}
