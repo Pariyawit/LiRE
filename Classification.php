@@ -39,7 +39,33 @@
 						</div>
 					</div>
 				</form>
+
+				<?php if(isset($_GET['seach_class'])):?>
+					<table class="table table-bordered table-condensed table-hover">
+						<thead>
+							<tr>
+								<th class="col-sm-10" style="text-align:center">Name</th>
+								<th class="col-sm-2" style="text-align:center">#</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php
+							$top_loans = top_loan($_GET['seach_class']);
+							foreach ($top_loans as $top_loan) {
+								echo "<tr>";
+								echo "<td>";
+								echo '<a href="bookdetail.php?ref='.$top_loan[0].'" style="text-align:center"><div>';
+								echo $top_loan[2]."</div></a></td>";
+								echo '<td style="padding-left:40px" style="text-align:center">'.$top_loan[1].'</td>';
+								echo "</tr>";
+						}
+						?>
+						</tbody>
+					</table>
+				<?php endif ?>
+
 			</div>
+
 			<div class="container">
 				<?php if(isset($_GET['seach_class'])) :?>
 					<table class="table table-bordered table-condensed table-hover">

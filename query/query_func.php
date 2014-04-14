@@ -112,4 +112,42 @@ function book_loan_time($ref){
 	}
 }
 
+function top_loan($classification){
+	if($classification[0] == '0'){
+		$classification = substr($classification,1);
+	}
+	if(strpos($classification,'.')==FALSE){
+		$classification .= '.';
+	}
+	try {
+		$input = 'for $row in /Document/class[@mainclass="'.$classification.'"]/*
+					return ($row/@NoticeKoha/string(),$row/@loanNum/string(),$row/text())';
+					//return ($record/marcxml:subfield[@code="k"],$record/marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"])';
+		//$session = new Session("localhost", "1984", "admin", "admin");
+		if(!isset($session)){
+			$session = new Session("localhost", "1984", "admin", "admin");
+		}
+		$session->execute('OPEN toploan');
+		$query = $session->query($input);
+		
+		$results = array();
+		while($query->more()){
+			$result = array();
+			array_push($result,$query->next()); #get Notice koha
+			array_push($result,$query->next()); #get loan num
+			array_push($result,$query->next()); #get Name
+			array_push($results,$result);
+		}
+		// close query instance
+		$query->close();
+		return $results;
+
+	} catch (Exception $e) {
+		// print exception
+		print $e->getMessage();
+		print "<br>Exception";
+	}
+}
+
+
 ?>
