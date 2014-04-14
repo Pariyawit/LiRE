@@ -6,7 +6,7 @@ $class = array(
 		array("00.3","Linguistique"),
 		array("00.4","Techniques documentaires"),
 		array("01","MATHEMATIQUES"),
-		array("01.1"," Mathématiques pour application à une autre discipline"),
+		array("01.1","Mathématiques pour application à une autre discipline"),
 		array("01.2","Fondement des mathématiques"),
 		array("01.3","Algèbre et théorie des nombres"),
 		array("01.4","Géométrie"),

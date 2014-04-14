@@ -22,7 +22,7 @@
 					if(isset($_GET['ref'])){
 						foreach ($details as $value) {
 							echo $value."<br>";
-						}
+						}	
 					}
 					echo 'This book has been loan '.$loan_num.' time(s)';
 				?>

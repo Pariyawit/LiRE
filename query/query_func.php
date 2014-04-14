@@ -101,4 +101,5 @@ function book_loan_time($ref){
 		print "<br>Exception";
 	}
 }
+
 ?>
