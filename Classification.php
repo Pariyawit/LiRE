@@ -90,7 +90,6 @@
 							echo "</tr>";
 							array_push($_SESSION['classification'],$result[0]);
 						}
-						$_SESSION['']
 					?>
 					</tbody>
 					</table>
