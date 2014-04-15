@@ -3,6 +3,9 @@
 	include 'class.php';
 	include 'query/query_func.php';
 	$current_page = 'Classification';
+
+	session_start();
+	$_SESSION['classification']=array();
 ?>
 	<body>
 		<?php include 'headnavbar.php'; ?>
@@ -85,7 +88,9 @@
 							echo '<a href="bookdetail.php?ref='.$result[0].'"><div>';
 							echo $result[2]."</div></a></td>";
 							echo "</tr>";
+							array_push($_SESSION['classification'],$result[0]);
 						}
+						$_SESSION['']
 					?>
 					</tbody>
 					</table>

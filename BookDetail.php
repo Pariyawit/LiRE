@@ -6,6 +6,22 @@
 		$details = query_book($_GET['ref']);
 		$loan_num = book_loan_time($_GET['ref']);
 	}
+	session_start();
+	$borrowers = get_borrower($_GET['ref']);
+	$related_books = array();
+	foreach ($borrowers as $borrower) {
+		$books = get_books($borrower);
+		foreach ($books as $book) {
+			if (in_array($book[0], $_SESSION['classification'])){
+				array_push($related_books,$book);
+			}
+		}
+	}
+	#remove redundancy
+	$related_books = array_map("unserialize", array_unique(array_map("serialize", $related_books)));
+	foreach ($related_books as $book) {
+		echo $book[0]."    ".$book[1]."<br>";
+	}
 ?>
 	<body>
 

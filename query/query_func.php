@@ -88,9 +88,7 @@ function book_loan_time($ref){
 	try {
 		$input = 'for $row in /Document/*
 			where $row/NoticeKoha="'.$ref.'"
-			return $row';
-					//return ($record/marcxml:subfield[@code="k"],$record/marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"])';
-		//$session = new Session("localhost", "1984", "admin", "admin");
+			return $row/LecteurCode/text()';
 		if(!isset($session)){
 			$session = new Session("localhost", "1984", "admin", "admin");
 		}
@@ -149,5 +147,60 @@ function top_loan($classification){
 	}
 }
 
+#get reader from book reference
+function get_borrower($NoticeKoha){
+	try {
+		$input = 'for $row in /Document/*
+					where $row/NoticeKoha="'.$NoticeKoha.'"
+					return $row/LecteurCode/text()';
+		if(!isset($session)){
+			$session = new Session("localhost", "1984", "admin", "admin");
+		}
+		$session->execute('OPEN historique');
+		$query = $session->query($input);
+		$results = array();
+		while($query->more()){
+			array_push($results,$query->next());
+		}
+		// close query instance
+		$query->close();
+		return array_unique($results);
 
+	} catch (Exception $e) {
+		// print exception
+		print $e->getMessage();
+		print "<br>Exception";
+	}
+}
+
+
+#get book from LecteurCode
+function get_books($NoticeKoha){
+	try {
+		$input = 'for $row in /Document/*
+					where $row/LecteurCode="'.$NoticeKoha.'"
+					return ($row/NoticeKoha/text(),$row/Titre/text())';
+		if(!isset($session)){
+			$session = new Session("localhost", "1984", "admin", "admin");
+		}
+		$session->execute('OPEN historique');
+		$query = $session->query($input);
+		$results = array();
+		while($query->more()){
+			$result = array();
+			array_push($result,$query->next());
+			array_push($result,$query->next());
+			array_push($results,$result);
+		}
+		// close query instance
+		$query->close();
+		#remove redundancy in the result
+		return array_map("unserialize", array_unique(array_map("serialize", $results)));
+
+	} catch (Exception $e) {
+		// print exception
+		print $e->getMessage();
+		print "<br>Exception";
+	}
+}
 ?>
