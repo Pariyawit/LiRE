@@ -1,10 +1,10 @@
 <?php 
+	session_start();
 	include 'header.php';
 	include 'class.php';
 	include 'query/query_func.php';
 	$current_page = 'Classification';
 
-	session_start();
 	$_SESSION['classification']=array();
 ?>
 	<body>
@@ -90,7 +90,6 @@
 							echo "</tr>";
 							array_push($_SESSION['classification'],$result[0]);
 						}
-						$_SESSION['']
 					?>
 					</tbody>
 					</table>

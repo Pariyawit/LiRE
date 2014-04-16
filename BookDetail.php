@@ -1,4 +1,5 @@
 <?php 
+	session_start();
 	include 'header.php';
 	include 'query/query_func.php';
 	$current_page = 'Book Detail';
@@ -6,7 +7,6 @@
 		$details = query_book($_GET['ref']);
 		$loan_num = book_loan_time($_GET['ref']);
 	}
-	session_start();
 	$borrowers = get_borrower($_GET['ref']);
 	$related_books = array();
 	foreach ($borrowers as $borrower) {
