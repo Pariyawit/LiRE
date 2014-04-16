@@ -48,11 +48,10 @@
 						}
 						$book_author = $details[3 + $dOffset];
 						$book_class = $details[4 + $dOffset];
-						$book_barcode = $details[5 + $dOffset];
-						$book_edition = $details[6 + $dOffset];
-						$book_pubname = $details[6 + $dOffset + $eOffset];
-						$book_pubplace = $details[7 + $dOffset + $eOffset];
-						$book_pubdate = $details[8 + $dOffset + $eOffset];
+						$book_edition = $details[5 + $dOffset];
+						$book_pubname = $details[5 + $dOffset + $eOffset];
+						$book_pubplace = $details[6 + $dOffset + $eOffset];
+						$book_pubdate = $details[7 + $dOffset + $eOffset];
 					?>
 					<h2>
 					<?php 
@@ -62,7 +61,7 @@
 					<p>
 					<?php
 						if($details[0]>0) echo $book_description."<br>";
-						echo $book_class." / ".$book_barcode."<br>";
+						echo $book_class. "<br>";
 						echo "Author : ".$book_author."<br>";	
 							if($details[1]=="yes") echo "Edition : ".$book_edition. "<br>";
 							echo "Publication : ".$book_pubname.", ".$book_pubplace.", ".$book_pubdate."<br>";	
