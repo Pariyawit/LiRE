@@ -86,9 +86,9 @@ function query_book($ref){
 
 function book_loan_time($ref){
 	try {
-		$input = 'for $row in /Document/*
-			where $row/NoticeKoha="'.$ref.'"
-			return $row/LecteurCode/text()';
+		$input = 'for $row in /historique/*
+			where $row/noticekoha="'.$ref.'"
+			return $row/lecteurkoha/text()';
 		if(!isset($session)){
 			$session = new Session("localhost", "1984", "admin", "admin");
 		}
@@ -118,8 +118,8 @@ function top_loan($classification){
 		$classification .= '.';
 	}
 	try {
-		$input = 'for $row in /Document/class[@mainclass="'.$classification.'"]/*
-					return ($row/@NoticeKoha/string(),$row/@loanNum/string(),$row/text())';
+		$input = 'for $row in /Document/class[@code="'.$classification.'"]/*
+					return ($row/@noticekoha/string(),$row/@loanNum/string(),$row/text())';
 					//return ($record/marcxml:subfield[@code="k"],$record/marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"])';
 		//$session = new Session("localhost", "1984", "admin", "admin");
 		if(!isset($session)){
@@ -150,9 +150,9 @@ function top_loan($classification){
 #get reader from book reference
 function get_borrower($NoticeKoha){
 	try {
-		$input = 'for $row in /Document/*
-					where $row/NoticeKoha="'.$NoticeKoha.'"
-					return $row/LecteurCode/text()';
+		$input = 'for $row in /historique/*
+					where $row/noticekoha="'.$NoticeKoha.'"
+					return $row/lecteurkoha/text()';
 		if(!isset($session)){
 			$session = new Session("localhost", "1984", "admin", "admin");
 		}
@@ -177,9 +177,9 @@ function get_borrower($NoticeKoha){
 #get book from LecteurCode
 function get_books($NoticeKoha){
 	try {
-		$input = 'for $row in /Document/*
-					where $row/LecteurCode="'.$NoticeKoha.'"
-					return ($row/NoticeKoha/text(),$row/Titre/text())';
+		$input = 'for $row in /historique/*
+					where $row/lecteurkoha="'.$NoticeKoha.'"
+					return ($row/noticekoha/text(),$row/titre/text())';
 		if(!isset($session)){
 			$session = new Session("localhost", "1984", "admin", "admin");
 		}

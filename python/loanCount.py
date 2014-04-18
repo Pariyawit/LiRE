@@ -1,7 +1,7 @@
-# -*- coding: iso-8859-1 -*-
-# -*- coding: UTF-16 -*-
+# -*- coding: UTF-8 -*-
 
 import BaseXClient
+import xml.dom.minidom as xmldom
 from array import *
 classification = ["0.","0.1","0.2","0.3","0.4","1.","1.1","1.2","1.3","1.4","1.5","1.6","1.7","1.8","1.9","2.","2.1","2.2","2.3","2.4","2.5","2.6","2.7","3.","3.1","3.2","3.3","3.4","3.5","3.6","3.7","3.8","3.9","4.","4.1","4.2","4.3","4.4","4.5","4.6","5.","5.1","5.2","5.3","5.4","5.5","5.6","6.","6.1","6.2","6.3","6.4","6.5","6.6","6.7","6.8","6.9","7.","7.1","7.2","7.3","7.4","8.","8.1","8.2","8.3","8.4","8.5","8.6","8.7","9.","9.1","9.2","9.3","9.4","9.5","10.","10.1","10.2","10.3","10.4","10.5","10.6","10.7","11.","11.1","11.2","11.3","11.4","11.5","11.6","11.7","12.","12.1","12.2","12.3","12.4","12.5","12.6","12.7"]
 try:
@@ -31,7 +31,7 @@ try:
 
 	#find number of borrows each book with distinct user by using set
 	#buf[0] book's classification
-	#buf[1] book's ref (noticeKoha)
+	#buf[1] book's ref (noticekoha)
 	#buf[2] book's name
 	for typecode, ref in query_ref.iter():
 		if(ref=='$'):
@@ -40,7 +40,7 @@ try:
 			ref = buff[1]
 			book_name = buff[2]
 			
-			find_loan_num = 'for $row in /Document/* where $row/NoticeKoha="'+ref+'" return $row/LecteurCode/text()'
+			find_loan_num = 'for $row in /historique/* where $row/noticekoha="'+ref+'" return $row/lecteurkoha/text()'
 			query_loan = session2.query(find_loan_num)
 			count_set = set()
 			for t,loan_num in query_loan.iter():
@@ -79,10 +79,10 @@ try:
 		main_class = str(classification)
 		loan_list = sorted(loan[main_class],key = lambda x: (x[2]), reverse=True)
 		i=0
-		xml += '<class mainclass="'+main_class+'.">'
+		xml += '<class code="'+main_class+'.">'
 		for l in loan_list :
 			#print l[0],l[1],l[2],l[3].encode('utf8')
-			xml += '<loan loanNum="'+str(l[2])+'" NoticeKoha="'+str(l[1])+'">'+l[3].encode('utf8')+'</loan>'
+			xml += '<loan loanNum="'+str(l[2])+'" noticekoha="'+str(l[1])+'">'+l[3].encode('utf8')+'</loan>'
 			i = i+1
 			if i >= 5:
 				break
@@ -97,18 +97,18 @@ try:
 		mem = -1
 
 		#l[0] = sub classification
-		#l[1] = NoticeKoha//bookref
+		#l[1] = noticekoha//bookref
 		#l[2] = loanNum
 		#l[3] = book_name
 		for l in loan_list:
 			if mem != l[0] :
 				if mem != -1 :
 					xml+= '</class>'
-				xml += '<class mainclass="'+main_class+'.'+l[0]+'">'
+				xml += '<class code="'+main_class+'.'+l[0]+'">'
 				top5_count = 0
 				mem = l[0]
 			if(top5_count<5 and l[2]>0):
-				xml += '<loan loanNum="'+str(l[2])+'" NoticeKoha="'+str(l[1])+'">'+l[3].encode('utf8')+'</loan>'
+				xml += '<loan loanNum="'+str(l[2])+'" noticekoha="'+str(l[1])+'">'+l[3].encode('utf8')+'</loan>'
 				#print l[0],l[1],l[2],l[3].encode('utf8')
 				
 			top5_count += 1
@@ -116,6 +116,13 @@ try:
 	xml+= '</Document>'
 	#print xml
 	session.add("toploan.xml", xml)
+
+	#print xml
+	xml = xmldom.parseString(xml)
+	pretty_xml_as_string = xml.toprettyxml()
+	#print pretty_xml_as_string.encode('utf8')
+	with open("../toploan.xml","w") as f:
+		f.write(pretty_xml_as_string.encode('utf8'));
 
 except IOError as e:
 	# print exception

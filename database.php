@@ -21,7 +21,7 @@ function connect_db(){
 			$file = $path."/extraction_brest_edit.xml";
 			$session->execute('CREATE DB extraction '.$file);
 
-			$file = $path."/historique_escap.xml";
+			$file = $path."/historique.xml";
 			$session->execute('CREATE DB historique '.$file);
 
 			$file = $path."/toploan.xml";
