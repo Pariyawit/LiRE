@@ -37,19 +37,22 @@
 				<div class="jumbotron col-md-8">
 					<?php
 						//echo $_GET['ref'].'<br>';
-						if($details[0]=="no") $dOffset = 1; // check if the book description field is available?
-						else $dOffset = 0; 
-						if($details[1]=="no") $eOffset = 1; // check if the book edition field is available?
-						else $eOffset = 0; 
+						$dOffset = $details[0]; // check if the book description field is available?
+						if($details[1]=="no") $eOffset = 0; // check if the book edition field is available?
+						else $eOffset = 1; 
 						$book_titre = $details[2];
-						$book_description = $details[3];
-						$book_author = $details[4 - $dOffset];
-						$book_class = $details[5 - $dOffset];
-						$book_barcode = $details[6 - $dOffset];
-						$book_edition = $details[7 - $dOffset];
-						$book_pubname = $details[8 - $dOffset - $eOffset];
-						$book_pubplace = $details[9 - $dOffset - $eOffset];
-						$book_pubdate = $details[10 - $dOffset - $eOffset];
+						$k=1;				
+						$book_description = $details[3];		
+						while($k < $dOffset){
+							$book_description = $book_description . "<br>" . $details[3 + $k];
+							$k++;
+						}
+						$book_author = $details[3 + $dOffset];
+						$book_class = $details[4 + $dOffset];
+						$book_edition = $details[5 + $dOffset];
+						$book_pubname = $details[5 + $dOffset + $eOffset];
+						$book_pubplace = $details[6 + $dOffset + $eOffset];
+						$book_pubdate = $details[7 + $dOffset + $eOffset];
 					?>
 					<h2>
 					<?php 
@@ -58,9 +61,8 @@
 					</h2>
 					<p>
 					<?php
-
-						if($details[0]=="yes") echo $book_description."<br>";
-						echo $book_class." / ".$book_barcode."<br>";
+						if($details[0]>0) echo $book_description."<br>";
+						echo $book_class. "<br>";
 						echo "Author : ".$book_author."<br>";	
 							if($details[1]=="yes") echo "Edition : ".$book_edition. "<br>";
 							echo "Publication : ".$book_pubname.", ".$book_pubplace.", ".$book_pubdate."<br>";	
