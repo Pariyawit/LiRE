@@ -26,9 +26,9 @@
 										echo '>';
 										echo $item[0].' -- '.$item[1].'</option>'; 
 									}
-									//else if (strpos($item[0],'.0') != FALSE){
-									//	continue;
-									//}
+									else if (strpos($item[0],'.0') != FALSE){
+										continue;
+									}
 									else{
 										echo '<option value="'.$item[0].'"';
 										if (isset($_GET['seach_class']) && $_GET['seach_class']==$item[0]) echo ' selected ';
