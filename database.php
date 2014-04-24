@@ -27,6 +27,9 @@ function connect_db(){
 			$file = $path."/toploan.xml";
 			$session->execute('CREATE DB toploan '.$file);
 
+			$file = $path."/old_lecteur_brest.xml";
+			$session->execute('CREATE DB lecteur '.$file);
+
 			print $session->info();		
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
 		}
