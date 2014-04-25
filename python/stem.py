@@ -7,15 +7,13 @@ wpt = nltk.WordPunctTokenizer()
 
 stemmer = Stemmer.Stemmer('french')
 
-sentence = """l'eau
-
-""".decode('UTF-8')
+sentence = """cate cat""".decode('UTF-8')
 
 tokens = nltk.word_tokenize(sentence)
 tokens2 = wpt.tokenize(sentence)
 
 print tokens
 print tokens2
-print fr_stem.stem(tokens2[0])
-print fr_stem.stem(tokens2[1])
-print fr_stem.stem(tokens2[2])
+
+for i in range(0,len(tokens2)):
+	print fr_stem.stem(tokens2[i])

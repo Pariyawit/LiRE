@@ -2,6 +2,8 @@
 import BaseXClient
 import nltk
 import string
+from xml.etree import ElementTree
+import xml.dom.minidom as xmldom
 
 fr_stem = nltk.stem.snowball.FrenchStemmer(ignore_stopwords=False)
 wpt = nltk.WordPunctTokenizer()
@@ -19,7 +21,6 @@ try:
 				for $record in //marcxml:record/*
 				where $record/marcxml:subfield[@code="e"]="BSTB"
 				and contains($record/marcxml:subfield[@code="k"]/text(),".")
-				and $record/../marcxml:controlfield[@tag="001"]="27980"
 				return ($record/marcxml:subfield[@code="k"]/text(),
 						$record/../marcxml:controlfield[@tag="001"]/text(),
 						$record/../marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"]/text(),
@@ -28,34 +29,60 @@ try:
 
 	query_ref = session.query(findref)
 	buff = []
-
-	loan = dict()
-
 	#find number of borrows each book with distinct user by using set
 	#buf[0] book's classification
 	#buf[1] book's ref (noticekoha)
 	#buf[2] book's name
 	#buf[3..n] book's details
-	for typecode, ref in query_ref.iter():
-		if(ref=='$'):
-			#print buff
+
+	keywordXML = ElementTree.Element("keywordXML")
+	classifications = dict()
+	books = dict()
+	#get each book
+	for typecode, output in query_ref.iter():
+		if(output=='$'):
 			tmp = buff[0].split(".");
 			ref = buff[1]
-			book_name = buff[2]
-			stems = []
-			for i in range(2,len(buff)):
-				print buff[i]
-				tokens = wpt.tokenize(buff[i])
-				for token in tokens:
-					if token not in string.punctuation:
-						stems.append(fr_stem.stem(token))
-			print stems
-			print '-------'
+			if tmp[0][0].isdigit():
+				code = tmp[0]+'.'+tmp[1][0]
+				if code not in classifications :
+					classifications[code] = dict()
 
+				if ref not in classifications[code] :
+					classifications[code][ref] = set()
+
+				for i in range(2,len(buff)):
+					tokens = wpt.tokenize(buff[i])
+					for token in tokens:
+						if token not in string.punctuation:
+							classifications[code][ref].add(fr_stem.stem(token))
 			buff = []
 			continue
+		buff.append(output)
 
-		buff.append(ref)
+	keywordXML = ElementTree.Element("keywordXML")
+	for codes in classifications.iterkeys() :
+		classification = ElementTree.SubElement(keywordXML,"classification")
+		classification.set('code',codes)
+		for ref in classifications[codes].iterkeys() :
+			book = ElementTree.SubElement(classification,"book")
+			book.set('noticekoha',ref)
+			for token in classifications[codes][ref] :
+				keyword = ElementTree.SubElement(book,"keyword")
+				keyword.text = token
+
+
+
+	tree = ElementTree.ElementTree(keywordXML)
+	tree.write("../keywordXML.xml",encoding="UTF-8", xml_declaration=True)
+
+	xml = xmldom.parse("../keywordXML.xml")
+	pretty_xml_as_string = xml.toprettyxml()
+	#print pretty_xml_as_string
+	with open("../keywordXML.xml","w") as f:
+		f.write(pretty_xml_as_string.encode('utf8'));
+
+	#print classifications
 
 except IOError as e:
 	# print exception
