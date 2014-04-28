@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <?php
 
+$path = realpath(dirname(__FILE__));
+
 if (session_status() === PHP_SESSION_NONE){
         session_start();
-}else{
-    #echo $_SESSION['UserID'];
 }
 if(!class_exists('Session')) {
     include 'BaseXClient.php';
@@ -12,7 +12,6 @@ if(!class_exists('Session')) {
 if(!isset($_SESSION['UserID'])){
     $_SESSION['UserID'] = false;
 }
- $_SESSION['UserID'] = '123456';
 ?>
 
 

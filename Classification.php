@@ -26,9 +26,6 @@
 										echo '>';
 										echo $item[0].' -- '.$item[1].'</option>'; 
 									}
-									else if (strpos($item[0],'.0') != FALSE){
-										continue;
-									}
 									else{
 										echo '<option value="'.$item[0].'"';
 										if (isset($_GET['seach_class']) && $_GET['seach_class']==$item[0]) echo ' selected ';
@@ -103,13 +100,6 @@
 
 
 		</div> <!-- /container -->
-
-
-		<!-- Bootstrap core JavaScript
-		================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-		<script src="../../dist/js/bootstrap.min.js"></script>
 	</body>
 
 <?php include 'footer.php';?>

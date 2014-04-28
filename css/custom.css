@@ -28,3 +28,7 @@ body.loading {
 body.loading .modal {
     display: block;
 }
+
+body .log {
+  margin-top: 20px;
+}

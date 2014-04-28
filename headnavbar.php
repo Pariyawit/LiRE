@@ -45,24 +45,30 @@ $files = array('index','classification')
 
 					<?php if($_SESSION['UserID'] == false): ?>
 						<div class="navbar-collapse collapse">
-						  	<form class="navbar-form navbar-right" role="form">
+						  	<form class="navbar-form navbar-right" role="form" action="login.php" method="post">
 							<div class="form-group">
-							  <input type="text" placeholder="UserID/CardNumber" class="form-control">
+							  <input name="id" type="text" placeholder="UserID/CardNumber" class="form-control" required>
 							</div>
-							<button type="submit" class="btn btn-success">My Recommendation</button>
+							<button type="submit" class="btn btn-success">Recommendation for Me</button>
 						  </form>
 						</div><!--/.navbar-collapse -->
 					<?php else: ?>
-						<ul class="nav navbar-nav navbar-right">
 						<?php if($_SESSION['UserID']=='admin'):?>
+							<ul class="nav navbar-nav">
 							<?php
 								if($current_page == 'Data Management') echo '<li class="active"><a href="data_manage.php">Data Management</a></li>';
 								else echo '<li><a href="data_manage.php">Data Management</a></li>';
 							?>
+							</ul>
 						<?php endif; ?>
-							<li><a disabled="disabled"><span class="glyphicon glyphicon-user"></span> <?php echo $_SESSION['UserID']; ?></a></li>
-							<li><a><span class="glyphicon glyphicon-log-out"></span>&nbsp;Log Out</a></li>
-						</ul>
+						<div class="navbar-collapse collapse">
+						  	<form class="navbar-form navbar-right" role="form" action="logout.php" method="post">
+							<div class="form-group">
+							  <input name="id" type="text" placeholder="<?php echo $_SESSION['UserID'];?>" class="form-control" disabled="disabled">
+							</div>
+							<button type="submit" class="btn btn-danger">Log Out</button>
+						  </form>
+						</div>
 					<?php endif; ?>
 
 				</div><!--/.nav-collapse -->

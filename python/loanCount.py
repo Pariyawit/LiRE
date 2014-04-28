@@ -19,7 +19,6 @@ try:
 				for $record in //marcxml:record/*
 				where $record/marcxml:subfield[@code="e"]="BSTB"
 				and contains($record/marcxml:subfield[@code="k"]/text(),".")
-				and $record/marcxml:subfield[@code="r"]="OUV"
 				return ($record/marcxml:subfield[@code="k"]/text(),
 						$record/../marcxml:controlfield[@tag="001"]/text(),
 						$record/../marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"]/text(),
@@ -28,31 +27,19 @@ try:
 	query_ref = session1.query(findref)
 	buff = []
 
-
 	loan = dict()
 
 	#find number of borrows each book with distinct user by using set
 	#buf[0] book's classification
 	#buf[1] book's ref (noticekoha)
 	#buf[2] book's name
-	xml = "<Document>"
 	for typecode, ref in query_ref.iter():
 		if(ref=='$'):
 			#print buff
 			tmp = buff[0].split(".");
 			ref = buff[1]
 			book_name = buff[2]
-
-			# Check if Buff[0](Categories) is in the 'xx.xx ABCD' format. if not, drop it
-			cls = buff[0]
-			if(cls[0]=='C'): 
-				buff = []
-				continue
-
-
-			#xml += "<book class='"+str(tmp)+"'>"+str(ref)+"</book>"
-			xml += '<book class="'+str(buff[0].encode('utf8'))+'">'+str(ref)+'</book>'
-
+			
 			find_loan_num = 'for $row in /historique/* where $row/noticekoha="'+ref+'" return $row/lecteurkoha/text()'
 			query_loan = session2.query(find_loan_num)
 			count_set = set()
@@ -72,15 +59,7 @@ try:
 			continue
 
 		buff.append(ref);
-	xml += "</Document>"
-
-	session1.add("bookref.xml", xml)
-
-	xml = xmldom.parseString(xml)
-	pretty_xml_as_string = xml.toprettyxml()
-
-	with open("../bookref.xml","w") as f:
-		f.write(pretty_xml_as_string.encode('utf8'));
+	
 	# drop database
 	#session.execute("drop db database")
 	# close session

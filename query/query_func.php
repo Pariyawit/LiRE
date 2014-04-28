@@ -202,4 +202,28 @@ function get_books($NoticeKoha){
 		print "<br>Exception";
 	}
 }
+
+function userCheck($id){
+	try {
+		$input = 'for $row in /Document
+					return $row/Row/CARDNUMBER="'.$id.'"';
+		if(!isset($session)){
+			$session = new Session("localhost", "1984", "admin", "admin");
+		}
+		$session->execute('OPEN lecteur');
+		$query = $session->query($input);
+		$result = $query->next();
+		// close query instance
+		$query->close();
+		#remove redundancy in the result
+		return $result;
+
+	} catch (Exception $e) {
+		// print exception
+		print $e->getMessage();
+		print "<br>Exception";
+	}
+}
+
+
 ?>
