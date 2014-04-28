@@ -17,6 +17,7 @@ function connect_db(){
 			
 			// create new database
 			$path = realpath(dirname(__FILE__));
+			$path = $path."/database";
 
 			$file = $path."/extraction_brest_edit.xml";
 			$session->execute('CREATE DB extraction '.$file);
