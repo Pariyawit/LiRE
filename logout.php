@@ -19,8 +19,6 @@ $_SESSION['UserID'] = false;
 include 'footer.php';
 ?>
 
-<script src="js/custom.js"></script>
-
 <script type="text/javascript">
 	setTimeout("window.location = '<?php echo $_SERVER['HTTP_REFERER'] ?>'", 2000);
 </script>

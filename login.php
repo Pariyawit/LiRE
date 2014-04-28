@@ -26,19 +26,11 @@ if($id == 'admin'){
 				<p>You will be redirected soon</p>
 			</div>
 		</div> <!-- /container -->
-
-
-		<!-- Bootstrap core JavaScript
-		================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-		<script src="../../dist/js/bootstrap.min.js"></script>
 	</body>
 
 <?php 
 include 'footer.php';
 ?>
-<script src="js/custom.js"></script>
 <script type="text/javascript">
 	setTimeout("window.location = '<?php echo $_SERVER['HTTP_REFERER'] ?>'", 2000);
 </script>
