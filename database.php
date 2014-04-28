@@ -31,6 +31,9 @@ function connect_db(){
 			$file = $path."/old_lecteur_brest.xml";
 			$session->execute('CREATE DB lecteur '.$file);
 
+			$file = $path."/keywordXML.xml";
+			$session->execute('CREATE DB keyword '.$file);
+
 			$file = $path."/bookref.xml";
 			$session->execute('CREATE DB bookref '.$file);
 
