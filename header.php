@@ -1,9 +1,18 @@
 <!DOCTYPE html>
 <?php
 
+if (session_status() === PHP_SESSION_NONE){
+        session_start();
+}else{
+    #echo $_SESSION['UserID'];
+}
 if(!class_exists('Session')) {
     include 'BaseXClient.php';
 }
+if(!isset($_SESSION['UserID'])){
+    $_SESSION['UserID'] = false;
+}
+ $_SESSION['UserID'] = '123456';
 ?>
 
 

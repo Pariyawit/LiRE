@@ -8,7 +8,7 @@ $files = array('index','classification')
 
 <div class="navbar navbar-default navbar-static-top" role="navigation">
 			<div class="container">
-				<div class="navbar-header">
+				<!--div class="navbar-header">
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 						<span class="sr-only">Toggle navigation</span>
 						<span class="icon-bar"></span>
@@ -16,9 +16,10 @@ $files = array('index','classification')
 						<span class="icon-bar"></span>
 					</button>
 					<a class="navbar-brand" href="#">LiRE</a>
-				</div>
+				</div-->
 
-				<div class="navbar-collapse collapse">
+				<!--div class="navbar-collapse collapse"-->
+				<div class="">
 					<ul class="nav navbar-nav">
 						<?php
 							for ($i=0 ;$i<count($files);$i=$i+1) {
@@ -41,12 +42,29 @@ $files = array('index','classification')
 							</ul>
 						</li-->
 					</ul>
-					<ul class="nav navbar-nav navbar-right">
-						<?php
-							if($current_page == 'Data Management') echo '<li class="active"><a href="data_manage.php">Data Management</a></li>';
-							else echo '<li><a href="data_manage.php">Data Management</a></li>';
-						?>
-					</ul>
+
+					<?php if($_SESSION['UserID'] == false): ?>
+						<div class="navbar-collapse collapse">
+						  	<form class="navbar-form navbar-right" role="form">
+							<div class="form-group">
+							  <input type="text" placeholder="UserID/CardNumber" class="form-control">
+							</div>
+							<button type="submit" class="btn btn-success">My Recommendation</button>
+						  </form>
+						</div><!--/.navbar-collapse -->
+					<?php else: ?>
+						<ul class="nav navbar-nav navbar-right">
+						<?php if($_SESSION['UserID']=='admin'):?>
+							<?php
+								if($current_page == 'Data Management') echo '<li class="active"><a href="data_manage.php">Data Management</a></li>';
+								else echo '<li><a href="data_manage.php">Data Management</a></li>';
+							?>
+						<?php endif; ?>
+							<li><a disabled="disabled"><span class="glyphicon glyphicon-user"></span> <?php echo $_SESSION['UserID']; ?></a></li>
+							<li><a><span class="glyphicon glyphicon-log-out"></span>&nbsp;Log Out</a></li>
+						</ul>
+					<?php endif; ?>
+
 				</div><!--/.nav-collapse -->
 			</div>
 		</div>
