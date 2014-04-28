@@ -59,7 +59,7 @@
 								echo "<td>";
 								echo '<a href="bookdetail.php?ref='.$top_loan[0].'" style="text-align:center"><div>';
 								echo $top_loan[2]."</div></a></td>";
-								echo '<td style="padding-left:40px" style="text-align:center">'.$top_loan[1].'</td>';
+								echo '<td style="text-align:center">'.$top_loan[1].'</td>';
 								echo "</tr>";
 						}
 						?>
@@ -83,7 +83,7 @@
 						$results = search_by_class($_GET['seach_class']);
 						foreach ($results as $result) {
 							echo "<tr>";
-							echo '<td style="padding-left:40px">'.$result[1].'</td>';
+							echo '<td style="padding-left:5%;">'.$result[1].'</td>';
 							echo "<td>";
 							echo '<a href="bookdetail.php?ref='.$result[0].'"><div>';
 							echo $result[2]."</div></a></td>";

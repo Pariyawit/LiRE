@@ -23,11 +23,11 @@
 					<?php
 						foreach ($histories as $result) {
 							echo "<tr>";
-							echo '<td style="padding-left:40px">'.$result[2].'</td>';
+							echo '<td style="text-align:center;">'.$result[2].'</td>';
 							echo "<td>";
 							echo '<a href="bookdetail.php?ref='.$result[0].'"><div>';
 							echo $result[1]."</div></a></td>";
-							echo '<td style="padding-left:40px">'.$result[3].'</td>';
+							echo '<td style="text-align:center;">'.$result[3].'</td>';
 							echo "</tr>";
 
 						}
