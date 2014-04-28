@@ -27,7 +27,10 @@ def classClean(cls):
 	try:
 		split = cls.index(' ')
 	except ValueError as v:
-		split = cls.index('-')
+		try:
+			split = cls.index('-')
+		except ValueError as ve:
+			split = len(cls)
 	cls = cls[0:split]
 	if(cls.index('.') == 1 ):
 		cls = "0" + cls
@@ -40,9 +43,15 @@ try:
 	session1 = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 	session2 = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 	session3 = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
+	session4 = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
+	sessionLF = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
+	sessionLKF = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 	session1.execute("open lecteur")
 	session2.execute("open historique")
 	session3.execute("open bookref")
+	session4.execute("open keywordXML")
+	sessionLF.execute("create db loanfreq")
+	sessionLKF.execute("create db loankeyfreq")
 
 	#Get all User ID from Old_lecteur_brest
 	findUser = '''/Document/Row/CARDNUMBER/text()'''
@@ -58,14 +67,23 @@ try:
 	f.close()
 
 	#Prepare the LoanFreqTable
-	xml = '<Document>'
-	xml += '<Row>'
+	xmlLF = '<Document>'
+	xmlLF += '<Row>'
+
+	#Prepare the LoanKeywordFreqTable
+	xmlLKF = '<Document>'
+	xmlLKF += '<Row>'
 
 	#Iterate through each user
 	for typecode,ref in queryUser.iter():
-		user = {}
+		#userLF is a dictionary used for counting Loan Frequency (during Season)
+		#userLKF is a dictionary used for counting Loan Keyword Frequency
+		userLF = {}
+		userLKF = {}
+
 		for c in classlist:
-			user[c] = defaultdict(int)
+			userLF[c] = defaultdict(int)
+			userLKF[c] = defaultdict(int)
 
 		findBorrowed = '''for $trans in /historique/* 
 						where $trans/codebarrelecteur="'''+ref+'''"
@@ -73,7 +91,8 @@ try:
 		queryBorrowed = session2.query(findBorrowed)
 
 		buff =[]
-		xml += '<user id="'+ref+'">'
+		xmlLF += '<user id="'+ref+'">'
+		xmlLKF += '<user id="'+ref+'">'
 
 		#Iterate through each book the user borrowed
 		for typecode, loan in queryBorrowed.iter():
@@ -86,43 +105,86 @@ try:
 							return data($b/@class)'''
 				queryClass = session3.query(findClass)
 
+				findKeyword = '''for $c in /keywordXML/classification/*
+								where $c/@noticekoha="'''+bookid+'''"
+								return ($c/keyword/text(),data($c/../@code),'$')'''
+				queryKeyword = session4.query(findKeyword)
+
+				#Find keyword of the borrowed book
+				tmp = []
+				for typecode,key in queryKeyword.iter():
+					if(key=='$'):
+						cls = tmp[len(tmp)-1]
+						cls = classClean(cls)
+						for keyword in range(0,len(tmp)-1):
+							userLKF[cls][tmp[keyword]] += 1
+						tmp = []
+					else:
+						#print key
+						tmp.append(key)
+
 				#Find class of the borrowed book			
 				for typecode,cls in queryClass.iter():
 					if(cls[0] == 'C' or cls[0] =='D' or cls[0]=='A'):
 						continue
 					cls = classClean(cls)
 					#Count the times of borrowing
-					user[cls][season] += 1
+					userLF[cls][season] += 1
 				buff = []
 			else:
 				buff.append(loan)
 
-		# write file
+		# Write File (Loan Frequency Table)
 		for c in classlist:
-			if(len(user[c]) == 0):
+			if(len(userLF[c]) == 0):
 				continue
-			xml += '<class category="'+c+'">'
-			for j in user[c]:
-				xml += '<count season="'+str(j)+'">'+str(user[c][j])+'</count>'
-			xml += '</class>' 
+			xmlLF += '<class category="'+c+'">'
+			for j in userLF[c]:
+				xmlLF += '<count season="'+str(j)+'">'+str(userLF[c][j])+'</count>'
+			xmlLF += '</class>' 
 
-		xml += '</user>'
+		# Write File (Loan Keyword Frequency Table)
+		for c in classlist:
+			if(len(userLKF[c]) == 0):
+				continue
+			xmlLKF += '<class category="'+c+'">'
+			for j in userLKF[c]:
+				xmlLKF += '<keyword count="'+str(userLKF[c][j])+'">'+str(j.encode('utf8')).decode('utf8')+'</keyword>'
+			xmlLKF += '</class>'
 
-	xml += '</Row>'
-	xml += '</Document>'
+		xmlLF += '</user>'
+		xmlLKF += '</user>'
 
+	xmlLF += '</Row>'
+	xmlLF += '</Document>'
+	xmlLKF += '</Row>'
+	xmlLKF += '</Document>'
+
+	session1.close()
 	session2.close()
 	session3.close()
+	session4.close()
 
-	#print xml
-	session1.add('loanfreqtable.xml',xml)
-	xml = xmldom.parseString(xml)
-	pretty_xml_as_string = xml.toprettyxml()
+	#print xml LF
+	sessionLF.add('loanfreqtable.xml',xmlLF)
+	xmlLF = xmldom.parseString(xmlLF)
+	pretty_xml_as_string = xmlLF.toprettyxml()
 	
 	with open('../loanfreqtable.xml','w') as f:
 		f.write(pretty_xml_as_string.encode('utf8'))
 
-	session1.close()
+	sessionLF.close()
+
+	#print xml LKF
+	sessionLKF.add('loankeywordfreqtable.xml',xmlLKF)
+	xmlLKF = xmldom.parseString(xmlLKF.encode('utf8'))
+	pretty_xml_as_string = xmlLKF.toprettyxml()
+	
+	with open('../loankeywordfreqtable.xml','w') as f:
+		f.write(pretty_xml_as_string.encode('utf8'))
+
+	sessionLKF.close()
+
 except IOError as e:
 	# print exception
 	print e
