@@ -19,6 +19,7 @@ try:
 				for $record in //marcxml:record/*
 				where $record/marcxml:subfield[@code="e"]="BSTB"
 				and contains($record/marcxml:subfield[@code="k"]/text(),".")
+				and $record/marcxml:subfield[@code="r"]="OUV"
 				return ($record/marcxml:subfield[@code="k"]/text(),
 						$record/../marcxml:controlfield[@tag="001"]/text(),
 						$record/../marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"]/text(),
@@ -41,6 +42,13 @@ try:
 			tmp = buff[0].split(".");
 			ref = buff[1]
 			book_name = buff[2]
+
+			# Check if Buff[0](Categories) is in the 'xx.xx ABCD' format. if not, drop it
+			cls = buff[0]
+			if(cls[0]=='C'): 
+				buff = []
+				continue
+
 
 			#xml += "<book class='"+str(tmp)+"'>"+str(ref)+"</book>"
 			xml += '<book class="'+str(buff[0].encode('utf8'))+'">'+str(ref)+'</book>'

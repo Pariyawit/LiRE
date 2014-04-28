@@ -16,6 +16,7 @@
 				<p>/historique.xml</p>
 				<p>/toploan.xml</p>
 				<p>/old_lecteur_brest.xml</p>
+				<p>/bookref.xml</p>
 				<input type="submit" class="button btn btn-primary" name="create" value="create" />
 			</div>
 			<div class="modal"><!-- Place at bottom of page --></div>

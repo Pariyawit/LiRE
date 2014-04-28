@@ -30,6 +30,9 @@ function connect_db(){
 			$file = $path."/old_lecteur_brest.xml";
 			$session->execute('CREATE DB lecteur '.$file);
 
+			$file = $path."/bookref.xml";
+			$session->execute('CREATE DB bookref '.$file);
+
 			print $session->info();		
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
 		}
