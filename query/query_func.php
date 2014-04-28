@@ -203,6 +203,37 @@ function get_books($NoticeKoha){
 	}
 }
 
+function get_books_from_codebarre($codebarrelecteur){
+	try {
+		$input = 'for $row in /historique/*
+					where $row/codebarrelecteur="'.$codebarrelecteur.'"
+					return ($row/noticekoha/text(),$row/titre/text(),$row/date/text(),$row/type/text())';
+		if(!isset($session)){
+			$session = new Session("localhost", "1984", "admin", "admin");
+		}
+		$session->execute('OPEN historique');
+		$query = $session->query($input);
+		$results = array();
+		while($query->more()){
+			$result = array();
+			array_push($result,$query->next());
+			array_push($result,$query->next());
+			array_push($result,$query->next());
+			array_push($result,$query->next());
+			array_push($results,$result);
+		}
+		// close query instance
+		$query->close();
+		#remove redundancy in the result
+		return array_map("unserialize", array_unique(array_map("serialize", $results)));
+
+	} catch (Exception $e) {
+		// print exception
+		print $e->getMessage();
+		print "<br>Exception";
+	}
+}
+
 function userCheck($id){
 	try {
 		$input = 'for $row in /Document

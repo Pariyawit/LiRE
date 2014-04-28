@@ -1,7 +1,7 @@
 <?php
 
-$menus = array('Home','Classification');
-$files = array('index','classification')
+$menus = array('Home','Classification','History');
+$files = array('index','classification','history')
 
 ?>
 
