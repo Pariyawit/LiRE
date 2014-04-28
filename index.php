@@ -1,6 +1,6 @@
 <?php 
 	include 'header.php';
-	$current_page = 'Index';
+	$current_page = 'Home';
 ?>
 	<body>
 
