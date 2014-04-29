@@ -49,7 +49,7 @@ try:
 	session1.execute("open lecteur")
 	session2.execute("open historique")
 	session3.execute("open bookref")
-	session4.execute("open keywordXML")
+	session4.execute("open keyword")
 	sessionLF.execute("create db loanfreq")
 	sessionLKF.execute("create db loankeyfreq")
 
@@ -59,7 +59,7 @@ try:
 
 	#Get the classification rule
 	classlist = []
-	f = open('../classification.txt','r')
+	f = open('../database/classification.txt','r')
 	buff = []
 	for buff in f:
 		i = buff.index(' ')
@@ -170,7 +170,7 @@ try:
 	xmlLF = xmldom.parseString(xmlLF)
 	pretty_xml_as_string = xmlLF.toprettyxml()
 	
-	with open('../loanfreqtable.xml','w') as f:
+	with open('../database/loanfreqtable.xml','w') as f:
 		f.write(pretty_xml_as_string.encode('utf8'))
 
 	sessionLF.close()
@@ -180,7 +180,7 @@ try:
 	xmlLKF = xmldom.parseString(xmlLKF.encode('utf8'))
 	pretty_xml_as_string = xmlLKF.toprettyxml()
 	
-	with open('../loankeywordfreqtable.xml','w') as f:
+	with open('../database/loankeywordfreqtable.xml','w') as f:
 		f.write(pretty_xml_as_string.encode('utf8'))
 
 	sessionLKF.close()
