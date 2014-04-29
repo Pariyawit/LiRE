@@ -86,12 +86,12 @@ try:
 
 
 	tree = ElementTree.ElementTree(keywordXML)
-	tree.write("../keywordXML.xml",encoding="UTF-8", xml_declaration=True)
+	tree.write("../database/keywordXML.xml",encoding="UTF-8", xml_declaration=True)
 
-	xml = xmldom.parse("../keywordXML.xml")
+	xml = xmldom.parse("../database/keywordXML.xml")
 	pretty_xml_as_string = xml.toprettyxml()
 	#print pretty_xml_as_string
-	with open("../keywordXML.xml","w") as f:
+	with open("../database/keywordXML.xml","w") as f:
 		f.write(pretty_xml_as_string.encode('utf8'));
 
 	#print classifications

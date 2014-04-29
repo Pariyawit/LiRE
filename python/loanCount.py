@@ -121,7 +121,7 @@ try:
 	xml = xmldom.parseString(xml)
 	pretty_xml_as_string = xml.toprettyxml()
 	#print pretty_xml_as_string.encode('utf8')
-	with open("../toploan.xml","w") as f:
+	with open("../database/toploan.xml","w") as f:
 		f.write(pretty_xml_as_string.encode('utf8'));
 
 except IOError as e:

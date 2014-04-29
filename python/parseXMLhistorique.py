@@ -21,9 +21,9 @@ with open(sys.argv[1], 'rU') as f:
 			colnum = colnum+1
 	
 	tree = ElementTree.ElementTree(historique)
-	tree.write("../historique.xml",encoding="UTF-8", xml_declaration=True)
+	tree.write("../database/historique.xml",encoding="UTF-8", xml_declaration=True)
 
-	xml = xmldom.parse("../historique.xml")
+	xml = xmldom.parse("../database/historique.xml")
 	pretty_xml_as_string = xml.toprettyxml()
-	with open("../historique.xml","w") as f:
+	with open("../database/historique.xml","w") as f:
 		f.write(pretty_xml_as_string.encode('utf8'));
