@@ -2,59 +2,21 @@
 import BaseXClient
 import nltk
 import string
+from nltk.corpus import stopwords
 from xml.etree import ElementTree
 import xml.dom.minidom as xmldom
 
 fr_stem = nltk.stem.snowball.FrenchStemmer(ignore_stopwords=False)
 wpt = nltk.WordPunctTokenizer()
 
-'''
-à
-après
-avant
-avec
-chez
-contre
-dans
-de
-depuis
-derrière
-devant
-durant
-en
-dehors
-face
-entre
-envers
-environ
-hors
-jusque
-loin
-malgré
-par
-parmi
-pendant
-pour
-près
-quant
-sans
-selon
-sous
-suivant
-sur
-vers
-
-car
-donc
-ensuite
-et
-mais
-or
-ou
-puis
-'''
-
-commonwords = ['de','et','and','la','le','l','d','of','à','du','en','pour','in','for','']
+stopwords_list = []
+stopwords_list.extend(stopwords.words('english'))
+stopwords_list.extend(stopwords.words('french'))
+#ntlk doesn't have 'les' in stopwords... why?
+stopwords_list.append('les')
+stopwords_list_encoded = []
+for word in stopwords_list:
+	stopwords_list_encoded.append(word.decode('UTF-8'))
 
 try:
 
@@ -102,8 +64,10 @@ try:
 
 				for i in range(2,len(buff)):
 					tokens = wpt.tokenize(buff[i])
-					for token in tokens:
-						if (token not in string.punctuation) and (len(token)>1):
+					#remove stopwords before stem
+					filtered_words = [w for w in tokens if not w in stopwords_list_encoded]
+					for token in filtered_words:
+						if (token not in string.punctuation) and (len(token)>1) and not token.isdigit():
 							token_stem = fr_stem.stem(token)
 							classifications[code][ref].add(token_stem)
 							if token_stem not in keywords:
@@ -114,7 +78,7 @@ try:
 		buff.append(output)
 
 	#print classifications
-	f = open('keywordcount.txt','w')
+	f = open('keywordcount_filter.txt','w')
 	for w in sorted(keywords, key=keywords.get, reverse=True):
 		#print w.encode('UTF-8'),',',keywords[w]
 		s = w.encode('UTF-8')+','+str(keywords[w])+'\n'
