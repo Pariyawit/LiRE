@@ -47,8 +47,8 @@
 					<table class="table table-bordered table-condensed table-hover">
 						<thead>
 							<tr>
-								<th class="col-sm-10" style="text-align:center">Name</th>
-								<th class="col-sm-2" style="text-align:center">#</th>
+								<th class="col-sm-10" style="text-align:center">Top 5 Most Borrowed Books</th>
+								<th class="col-sm-2" style="text-align:center">Time(s)</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -75,7 +75,7 @@
 					<thead>
 						<tr>
 							<th class="col-sm-2" style="text-align:center">Code</th>
-							<th class="col-sm-10" style="text-align:center">Name</th>
+							<th class="col-sm-10" style="text-align:center">Book Title</th>
 						</tr>
 					</thead>
 					<tbody>
