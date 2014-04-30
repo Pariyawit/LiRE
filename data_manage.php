@@ -20,6 +20,7 @@
 				<p>/keywordXML.xml</p>
 				<p>/loanfreqtable.xml</p>
 				<p>/loankeywordfreqtable.xml</p>
+				<p>/wordnetfrench.xml</p>
 				<input type="submit" class="button btn btn-primary" name="create" value="create" />
 			</div>
 			<div class="modal"><!-- Place at bottom of page --></div>

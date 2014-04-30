@@ -43,6 +43,9 @@ function connect_db(){
 			$file = $path."/loankeywordfreqtable.xml";
 			$session->execute('CREATE DB loankeyfreq '.$file);
 
+			$file = $path."/wordnetfrench.xml";
+			$session->execute('CREATE DB wordnetfrench '.$file);
+
 			print $session->info();		
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
 		}

@@ -2,7 +2,10 @@
 import BaseXClient
 import nltk
 import string
+#nltk.corpus stopwords download required
 from nltk.corpus import stopwords
+#nltk.corpus wordnet download required
+from nltk.corpus import wordnet as wn
 from xml.etree import ElementTree
 import xml.dom.minidom as xmldom
 
@@ -21,10 +24,48 @@ stopwords_list_encoded = []
 for word in stopwords_list:
 	stopwords_list_encoded.append(word.decode('UTF-8'))
 
+#input is unstemmed word because nltk provide good dictionary
+def en_synonyms(word):
+	synonyms = set()
+	synsets = wn.synsets(word)
+	for synset in synsets:
+		synonyms.update(synset.lemma_names)
+	synonyms.add(word)
+	#print word,len(synonyms)
+	return synonyms
+
+#open database
+session_wordnet = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
+session_wordnet.execute("open wordnetfrench")
+print session_wordnet.info()
+#input is stemmed word and use starts_with to find the synonym
+def fr_synonyms(stemmed_word):
+	try:
+		synonyms = set()
+		synonyms.add(stemmed_word)
+		if(len(stemmed_word)<5):
+			return synonyms
+		find_syn = '''for $synset in /WN/SYNSET/SYNONYM/LITERAL
+						where starts-with($synset,"'''+stemmed_word+'''")
+						let $nl := "&#10;"
+						for $s in $synset/../../SYNONYM/LITERAL
+						where $s/text() != "_EMPTY_"
+						return ($s/text())'''
+		synsets = session_wordnet.query(find_syn)
+		for typecode, output in synsets.iter():
+			if(' ' not in output):
+				synonyms.add(output)
+		#print stemmed_word.encode('UTF-8'),len(synonyms)
+		return synonyms
+
+	except IOError as e:
+		print '!!!!!!error!!!!!!'
+		#print e
+
 try:
 	#create session
 	session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
-	# create empty database
+	#open database
 	session.execute("open extraction")
 	print session.info()
 	
@@ -55,12 +96,14 @@ try:
 	#get each book
 	for typecode, output in query_ref.iter():
 		if(output=='$'):
+			print ''
+			print buff
+			#print '---------------------------'
+			# sign '#' means end of language section of the book
 			lang_offset = buff.index("#")
 			lang = []
 			for i in range(0,lang_offset):
 				lang.append(buff[i])
-			if(lang_offset>1):
-				print buff
 			tmp = buff[lang_offset+1].split(".")
 			ref = buff[lang_offset+2]
 			if tmp[0][0].isdigit():
@@ -79,14 +122,25 @@ try:
 					for token in filtered_tokens:
 						if (token not in string.punctuation) and (len(token)>1) and not token.isdigit():
 							#different stem function for different lang
+							#if both fre and eng appear in lang, use both stem function becuase the book's title/description lanuage is unknown
 							if("fre" in lang):
-								classifications[code][ref].add(fr_stem.stem(token))
+								synsets = fr_synonyms(fr_stem.stem(token))
+								for syn in synsets:
+									classifications[code][ref].add(fr_stem.stem(syn))
 							if("eng" in lang):
-								classifications[code][ref].add(en_stem.stem(token))
+								synsets = en_synonyms(token)
+								for syn in synsets:
+									classifications[code][ref].add(en_stem.stem(syn))
+							elif("fre" not in lang):
+								print '------NOT IN BOTH'
+								synsets = en_synonyms(token)
+								for syn in synsets:
+									classifications[code][ref].add(en_stem.stem(syn))
 			buff = []
 			continue
 		buff.append(output)
 
+	#put all result to xml format
 	keywordXML = ElementTree.Element("keywordXML")
 	for codes in classifications.iterkeys() :
 		classification = ElementTree.SubElement(keywordXML,"classification")
@@ -101,12 +155,12 @@ try:
 
 
 	tree = ElementTree.ElementTree(keywordXML)
-	tree.write("../database/keywordXML.xml",encoding="UTF-8", xml_declaration=True)
+	tree.write("../database/keywordXML_syn.xml",encoding="UTF-8", xml_declaration=True)
 
-	xml = xmldom.parse("../database/keywordXML.xml")
+	xml = xmldom.parse("../database/keywordXML_syn.xml")
 	pretty_xml_as_string = xml.toprettyxml()
 	#print pretty_xml_as_string
-	with open("../database/keywordXML.xml","w") as f:
+	with open("../database/keywordXML_syn.xml","w") as f:
 		f.write(pretty_xml_as_string.encode('utf8'));
 
 	#print classifications
