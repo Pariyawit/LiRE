@@ -61,10 +61,11 @@ try:
 	sessionLKF.execute("create db loankeyfreq")
 
 	#Get all User ID from Old_lecteur_brest
-	findUser = '''/Document/Row/CARDNUMBER/text()'''
+	findUser = '''for $user in /Document/*
+				return $user/CARDNUMBER/text()'''
 	queryUser = session1.query(findUser)
 
-	#Get the classification rule
+	#Get the category list
 	classlist = []
 	f = open(path+'classification.txt','r')
 	buff = []
@@ -81,17 +82,21 @@ try:
 	xmlLKF = '<Document>'
 	xmlLKF += '<Row>'
 
+	u = defaultdict(int)
 	#Iterate through each user
 	for typecode,ref in queryUser.iter():
 		#userLF is a dictionary used for counting Loan Frequency (during Season)
 		#userLKF is a dictionary used for counting Loan Keyword Frequency
+		u[ref] += 1
 		userLF = {}
 		userLKF = {}
 
+		#initialize both table value to 0, so it can be firstly refrenced by adding value to it directly.
 		for c in classlist:
 			userLF[c] = defaultdict(int)
 			userLKF[c] = defaultdict(int)
 
+		#get all the books borrowed by user with user id = ref
 		findBorrowed = '''for $trans in /historique/* 
 						where $trans/codebarrelecteur="'''+ref+'''"
 						return ($trans/noticekoha/text(),$trans/date/text(),"$")'''
@@ -107,6 +112,7 @@ try:
 				bookid = buff[0]
 				date = buff[1]
 				season = findSeason(date)
+
 				findClass = '''for $b in /Document/*
 							where $b/text()="'''+bookid+'''"
 							return data($b/@class)'''
@@ -166,6 +172,9 @@ try:
 	xmlLF += '</Document>'
 	xmlLKF += '</Row>'
 	xmlLKF += '</Document>'
+
+	for e in u:
+		if(u[e]>1): print e, u[e]
 
 	session1.close()
 	session2.close()
