@@ -5,6 +5,12 @@ import string
 from nltk.corpus import stopwords
 from xml.etree import ElementTree
 import xml.dom.minidom as xmldom
+import os
+if (os.path.isdir("../database/")):
+	outFile = "../database/keywordcount_filter.txt"
+else:
+	outFile = "database/keywordcount_filter.txt"
+
 
 fr_stem = nltk.stem.snowball.FrenchStemmer(ignore_stopwords=False)
 wpt = nltk.WordPunctTokenizer()
@@ -78,7 +84,7 @@ try:
 		buff.append(output)
 
 	#print classifications
-	f = open('keywordcount_filter.txt','w')
+	f = open(outFile,'w')
 	for w in sorted(keywords, key=keywords.get, reverse=True):
 		#print w.encode('UTF-8'),',',keywords[w]
 		s = w.encode('UTF-8')+','+str(keywords[w])+'\n'

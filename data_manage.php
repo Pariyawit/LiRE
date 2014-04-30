@@ -14,14 +14,25 @@
 				<h1>Create Database</h1><br>
 				<p>/extraction_brest.xml</p>
 				<p>/historique.xml</p>
-				<p>/toploan.xml</p>
 				<p>/old_lecteur_brest.xml</p>
-				<p>/bookref.xml</p>
-				<p>/keywordXML.xml</p>
-				<p>/loanfreqtable.xml</p>
-				<p>/loankeywordfreqtable.xml</p>
 				<p>/wordnetfrench.xml</p>
+				<p><i>run toploanBuild.py</i><br>/toploan.xml</p>
+				<p><i>run bookrefBuild.py</i><br>/bookref.xml</p>
+				<p><i>run keywordBuild.py</i><br>/keywordXML.xml</p>
+				<p><i>run loanfreq.py</i><br>
+					/loanfreqtable.xml<br>
+					/loankeywordfreqtable.xml</p>
+				<p><i>run season.py</i><p>
 				<input type="submit" class="button btn btn-primary" name="create" value="create" />
+				<br>
+				<h1>Upload file</h1>
+				<form class="form" action="upload_file.php" role="form" method="post" enctype="multipart/form-data">
+					<div class="form-group">
+						<label for="file">Filename:</label>
+						<input type="file" name="file" id="file" class="btn">
+					</div>
+						<input type="submit" name="submit" value="Submit" class="btn btn-default">
+				</form>
 			</div>
 			<div class="modal"><!-- Place at bottom of page --></div>
 

@@ -2,6 +2,8 @@
 import csv
 import sys
 
+#find missing lecteur
+
 lecteur = set()
 
 with open('historique_pret.csv', 'rU') as f:

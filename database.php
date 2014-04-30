@@ -15,6 +15,7 @@ function connect_db(){
 				$session = new Session("localhost", "1984", "admin", "admin");
 			}
 			
+			set_time_limit(0);
 			// create new database
 			$path = realpath(dirname(__FILE__));
 			$path = $path."/database";
@@ -25,26 +26,29 @@ function connect_db(){
 			$file = $path."/historique.xml";
 			$session->execute('CREATE DB historique '.$file);
 
-			$file = $path."/toploan.xml";
-			$session->execute('CREATE DB toploan '.$file);
-
 			$file = $path."/old_lecteur_brest.xml";
 			$session->execute('CREATE DB lecteur '.$file);
 
+			$file = $path."/wordnetfrench.xml";
+			$session->execute('CREATE DB wordnetfrench '.$file);
+
+			exec('python python/toploanBuild.py');
+			$file = $path."/toploan.xml";
+			$session->execute('CREATE DB toploan '.$file);
+
+			exec('python python/keywordbuild.py');
 			$file = $path."/keywordXML.xml";
 			$session->execute('CREATE DB keyword '.$file);
 
+			exec('python python/bookrefBuild.py');
 			$file = $path."/bookref.xml";
 			$session->execute('CREATE DB bookref '.$file);
 
+			exec('python python/loanfreq.py');
 			$file = $path."/loanfreqtable.xml";
 			$session->execute('CREATE DB loanfreq '.$file);
-
 			$file = $path."/loankeywordfreqtable.xml";
 			$session->execute('CREATE DB loankeyfreq '.$file);
-
-			$file = $path."/wordnetfrench.xml";
-			$session->execute('CREATE DB wordnetfrench '.$file);
 
 			print $session->info();		
 			header('Location: ' . $_SERVER['HTTP_REFERER']);

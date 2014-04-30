@@ -6,6 +6,12 @@ from nltk.corpus import stopwords
 from xml.etree import ElementTree
 import xml.dom.minidom as xmldom
 
+import os
+if (os.path.isdir("../database/")):
+	outFile = "../database/keywordXML.xml"
+else:
+	outFile = "database/keywordXML.xml"
+
 en_stem = nltk.stem.snowball.SnowballStemmer("english")
 fr_stem = nltk.stem.snowball.SnowballStemmer("french")
 
@@ -101,12 +107,12 @@ try:
 
 
 	tree = ElementTree.ElementTree(keywordXML)
-	tree.write("../database/keywordXML.xml",encoding="UTF-8", xml_declaration=True)
+	tree.write(outFile,encoding="UTF-8", xml_declaration=True)
 
-	xml = xmldom.parse("../database/keywordXML.xml")
+	xml = xmldom.parse(outFile)
 	pretty_xml_as_string = xml.toprettyxml()
 	#print pretty_xml_as_string
-	with open("../database/keywordXML.xml","w") as f:
+	with open(outFile,"w") as f:
 		f.write(pretty_xml_as_string.encode('utf8'));
 
 	#print classifications

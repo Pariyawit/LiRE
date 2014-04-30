@@ -9,6 +9,7 @@ from nltk.corpus import wordnet as wn
 from xml.etree import ElementTree
 import xml.dom.minidom as xmldom
 
+
 en_stem = nltk.stem.snowball.SnowballStemmer("english")
 fr_stem = nltk.stem.snowball.SnowballStemmer("french")
 
@@ -94,9 +95,12 @@ try:
 	classifications = dict()
 	books = dict()
 	#get each book
+	book_count = 0
 	for typecode, output in query_ref.iter():
 		if(output=='$'):
 			print ''
+			print '['+str(book_count)+'/19628]'
+			book_count = book_count+1
 			print buff
 			#print '---------------------------'
 			# sign '#' means end of language section of the book
@@ -140,6 +144,7 @@ try:
 			continue
 		buff.append(output)
 
+	print 'pushing xml...'
 	#put all result to xml format
 	keywordXML = ElementTree.Element("keywordXML")
 	for codes in classifications.iterkeys() :
@@ -153,7 +158,7 @@ try:
 				keyword.text = token
 
 
-
+	print 'making xml file...'
 	tree = ElementTree.ElementTree(keywordXML)
 	tree.write("../database/keywordXML_syn.xml",encoding="UTF-8", xml_declaration=True)
 

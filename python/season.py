@@ -4,6 +4,12 @@ from array import *
 from collections import defaultdict
 import time
 
+import os
+if (os.path.isdir("../database/")):
+	db_path = "../database/"
+else:
+	db_path = "database/"
+
 try:
 
 	seasonList = []
@@ -12,7 +18,7 @@ try:
 	oldestseason = ''
 
 	# Read the season file
-	f = open("../database/season.txt","r")
+	f = open(db_path+"season.txt","r")
 	for buff in f:
 		if(buff[0]=='#'):
 			try:
@@ -47,7 +53,7 @@ try:
 		for i in range(0,len(countList)):
 			countList[i] = str(int(countList[i])+1)
 		countList.append('1')
-		with open("../database/season.txt","w") as f:
+		with open(db_path+"season.txt","w") as f:
 			f.write("#currentseason = "+currentseason+"\n")
 			f.write("#oldestseason = "+oldestseason+"\n")
 			f.write("[season-weightedscore]"+"\n")

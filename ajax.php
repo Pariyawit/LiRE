@@ -8,7 +8,6 @@ if (isset($_POST['action'])) {
             select();
             break;
     }
-    echo 'lolololol';
 }
 
 function select() {

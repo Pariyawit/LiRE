@@ -5,6 +5,13 @@ import xml.dom.minidom as xmldom
 from array import *
 from collections import defaultdict
 
+import os
+if (os.path.isdir("../database/")):
+	outFile = "../database/loankeywordfreqtable.xml"
+	path = "../database/"
+else:
+	outFile = "database/loankeywordfreqtable.xml"
+	path = "database/"
 
 # A method to transform the date into the season format.
 # for example, "2013/05/22" -> "2013/2"
@@ -59,7 +66,7 @@ try:
 
 	#Get the classification rule
 	classlist = []
-	f = open('../database/classification.txt','r')
+	f = open(path+'classification.txt','r')
 	buff = []
 	for buff in f:
 		i = buff.index(' ')
@@ -170,7 +177,7 @@ try:
 	xmlLF = xmldom.parseString(xmlLF)
 	pretty_xml_as_string = xmlLF.toprettyxml()
 	
-	with open('../database/loanfreqtable.xml','w') as f:
+	with open(path+'loanfreqtable.xml','w') as f:
 		f.write(pretty_xml_as_string.encode('utf8'))
 
 	sessionLF.close()
@@ -180,7 +187,7 @@ try:
 	xmlLKF = xmldom.parseString(xmlLKF.encode('utf8'))
 	pretty_xml_as_string = xmlLKF.toprettyxml()
 	
-	with open('../database/loankeywordfreqtable.xml','w') as f:
+	with open(outFile,'w') as f:
 		f.write(pretty_xml_as_string.encode('utf8'))
 
 	sessionLKF.close()
