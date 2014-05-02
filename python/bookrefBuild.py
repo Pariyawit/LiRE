@@ -18,24 +18,30 @@ try:
 	print session.info()
 	# run query on database, get all books
 	findref = '''declare namespace marcxml = "http://www.loc.gov/MARC21/slim";
-				for $record in //marcxml:record/*
-				where $record/marcxml:subfield[@code="e"]="BSTB"
-				and contains($record/marcxml:subfield[@code="k"]/text(),".")
-				and $record/marcxml:subfield[@code="r"]="OUV"
-				return ($record/marcxml:subfield[@code="k"]/text(),
-						$record/../marcxml:controlfield[@tag="001"]/text(),
-						"$")'''
+ 				for $record in //marcxml:record
+				where $record/marcxml:datafield[@tag="995"]/marcxml:subfield[@code="e"]="BSTB"
+				and $record/marcxml:datafield[@tag="995"]/marcxml:subfield[@code="r"]="OUV"
+				and $record/marcxml:datafield[@tag="995"]/marcxml:subfield[@code="k"]/text()[contains(.,".")]
+				return (distinct-values($record/marcxml:datafield[@tag="995"]/marcxml:subfield[@code="k"]/text()),
+					$record/marcxml:controlfield[@tag="001"]/text(),
+					$record/marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"]/text(),"$")'''
 
 	query_ref = session.query(findref)
 	buff = []
 
 	xml = '<Document>'
 	for typecode, ref in query_ref.iter():
+		#print ref.encode('utf8')
 		if(ref=='$'):
 			classes = buff[0]
 			noticekoha = buff[1]
-			xml += '<book class="'+str(classes.encode('utf8'))+'">'+str(noticekoha)+'</book>'
+			title = buff[2]
+			#print buff
 			buff = []
+			xml += '<book class="'+str(classes.encode('utf8'))+'">'
+			xml += '<title>'+str(title.encode('utf8'))+'</title>'
+			xml += '<noticekoha>'+str(noticekoha.encode('utf8'))+'</noticekoha>'
+			xml += '</book>'
 		else:
 			buff.append(ref);
 	
