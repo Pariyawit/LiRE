@@ -157,11 +157,12 @@ try:
 				keyword = ElementTree.SubElement(book,"keyword")
 				keyword.text = token
 
-
+	#able to create one-line XML file after 2.5 hours
 	print 'making xml file...'
 	tree = ElementTree.ElementTree(keywordXML)
 	tree.write("../database/keywordXML_syn.xml",encoding="UTF-8", xml_declaration=True)
 
+	# -----------!!!-------------MEMORY ERROR after this...-----------!!!-------------
 	xml = xmldom.parse("../database/keywordXML_syn.xml")
 	pretty_xml_as_string = xml.toprettyxml()
 	#print pretty_xml_as_string
