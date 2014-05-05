@@ -2,16 +2,9 @@
 
 import BaseXClient
 import xml.dom.minidom as xmldom
+import Classification
 from array import *
 from collections import defaultdict
-
-def subcatToCat(category):
-	try:
-		buff = category.index('.')
-		buff = category.split('.')
-		return buff[0]
-	except ValueError as v:
-		return -1
 
 try:
 	session1 = BaseXClient.Session('localhost',1984,'admin','admin')
