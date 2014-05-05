@@ -52,7 +52,6 @@ print 'book :',len(book_ref)
 table = numpy.array([[0]*i]*i)
 #table2 = numpy.array([[0]*i]*i)
 
-
 print "calculate"
 try:
 	#create session
@@ -80,9 +79,35 @@ try:
 except IOError as e:
 	print e
 
-print "making matrix..."
+print "Calculating table x table.T..."
 
 table = table.dot(table.T)
+#print "calculating the second time"
+#table = table.dot(table.T)
+#result is matrix of book x book which [i][j] is number of common keyword of book i and book j
+
+relatedBook = ElementTree.Element("relatedBook")
+for noticekoha_row, ref_row in book_ref.iteritems():
+	book = ElementTree.SubElement(relatedBook,"book")
+	book.set('noticekoha',noticekoha_row)
+	for noticekoha_col, ref_col in book_ref.iteritems():
+		if(table[ref_row][ref_col]>0):
+			relatedTo = ElementTree.SubElement(relatedTo,"relatedTo")
+			relatedTo.set('score',table[ref][key_ref])
+			relatedTo.text = noticekoha_col
+
+#free memory of table
+table = None
+
+tree = ElementTree.ElementTree(relatedBook)
+tree.write(path+'relatedBook.xml',encoding="UTF-8", xml_declaration=True)
+
+xml = xmldom.parse(path+'relatedBook.xml')
+pretty_xml_as_string = xml.toprettyxml()
+#print pretty_xml_as_string
+with open(outFile,"w") as f:
+	f.write(pretty_xml_as_string.encode('utf8'));
+
 
 '''
 P = numpy.array(table)
