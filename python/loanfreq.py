@@ -106,6 +106,7 @@ try:
 		xmlLF += '<user id="'+ref+'">'
 		xmlLKF += '<user id="'+ref+'">'
 
+
 		#Iterate through each book the user borrowed
 		for typecode, loan in queryBorrowed.iter():
 			if(loan=='$'):
@@ -114,7 +115,7 @@ try:
 				season = findSeason(date)
 
 				findClass = '''for $b in /Document/*
-							where $b/text()="'''+bookid+'''"
+							where $b/noticekoha="'''+bookid+'''"
 							return data($b/@class)'''
 				queryClass = session3.query(findClass)
 
