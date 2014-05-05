@@ -1,7 +1,8 @@
-#currentseason = 2014/1
+#currentseason = 2014/2
 #oldestseason = 2013/1
 [season-weightedscore]
-2013/1-4
-2013/2-3
-2013/3-2
-2014/1-1
+2013/1-5
+2013/2-4
+2013/3-3
+2014/1-2
+2014/2-1

@@ -30,7 +30,7 @@ def findSeason(date):
 
 # A method to clean the class received from query and transform to its category.
 # for example, "1.66 PENN" -> "01.6"
-def classClean(cls):
+def classtoCat(cls):
 	try:
 		split = cls.index(' ')
 	except ValueError as v:
@@ -129,7 +129,7 @@ try:
 				for typecode,key in queryKeyword.iter():
 					if(key=='$'):
 						cls = tmp[len(tmp)-1]
-						cls = classClean(cls)
+						cls = classtoCat(cls)
 						for keyword in range(0,len(tmp)-1):
 							userLKF[cls][tmp[keyword]] += 1
 						tmp = []
@@ -141,7 +141,7 @@ try:
 				for typecode,cls in queryClass.iter():
 					if(cls[0] == 'C' or cls[0] =='D' or cls[0]=='A'):
 						continue
-					cls = classClean(cls)
+					cls = classtoCat(cls)
 					#Count the times of borrowing
 					userLF[cls][season] += 1
 				buff = []
