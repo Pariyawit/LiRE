@@ -108,6 +108,8 @@ pretty_xml_as_string = xml.toprettyxml()
 with open(outFile,"w") as f:
 	f.write(pretty_xml_as_string.encode('utf8'));
 
+session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
+session.add("relatedBook", pretty_xml_as_string)
 
 '''
 P = numpy.array(table)

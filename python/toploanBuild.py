@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
-
+#find 5 most borrow books in each category
+#save to database/toploan.xml
+#make database toploan.xml
 import BaseXClient
 import xml.dom.minidom as xmldom
 from array import *

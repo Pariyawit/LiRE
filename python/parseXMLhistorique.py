@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#python parseXMLhistorique.py historique_file.csv
 import csv
 import sys
 
