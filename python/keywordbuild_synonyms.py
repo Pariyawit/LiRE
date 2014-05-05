@@ -9,7 +9,6 @@ from nltk.corpus import wordnet as wn
 from xml.etree import ElementTree
 import xml.dom.minidom as xmldom
 
-
 en_stem = nltk.stem.snowball.SnowballStemmer("english")
 fr_stem = nltk.stem.snowball.SnowballStemmer("french")
 
@@ -124,7 +123,12 @@ try:
 					#remove stopwords before stem
 					filtered_tokens = [w for w in tokens if not w in stopwords_list_encoded]
 					for token in filtered_tokens:
-						if (token not in string.punctuation) and (len(token)>1) and not token.isdigit():
+						valid = True
+						for t in token:
+							if t in string.punctuation:
+								valid &= False
+
+						if valid and (token not in string.punctuation) and (len(token)>1) and not token.isdigit() and (',' not in token):
 							#different stem function for different lang
 							#if both fre and eng appear in lang, use both stem function becuase the book's title/description lanuage is unknown
 							if("fre" in lang):

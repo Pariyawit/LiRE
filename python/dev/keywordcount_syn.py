@@ -9,7 +9,6 @@ elif (os.path.isdir("/database/")):
 else:
 	path = "../../database/"
 
-
 try:
 
 	#create session
@@ -32,11 +31,16 @@ try:
 		keywords[keyword] = keywords[keyword]+1
 
 	#print classifications
-	f = open(path+"keywordcount_syn.txt",'w')
+	f = open(path+"keywordcount_syn.txt",'wb')
 	for w in sorted(keywords, key=keywords.get, reverse=True):
 		#print w.encode('UTF-8'),',',keywords[w]
-		s = w.encode('UTF-8')+','+str(keywords[w])+'\n'
-		f.write(s)
+		valid = True
+		for s in string.punctuation:
+			if s in w:
+				valid &= False
+		if valid:
+			s = w.encode('UTF-8')+','+str(keywords[w])+'\n'
+			f.write(s)
 
 except IOError as e:
 	# print exception
