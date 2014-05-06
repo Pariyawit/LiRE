@@ -42,8 +42,8 @@ try:
 
 			# Clean book's class by comparing the 930/a subfields with 995/k subfields ( both 930/a and 995/k can be replicated)
 			# because sometimes these fields are correspond to different value, even though it should always be the same
-			# if they are different, finding the more suitable one to used as the book's class
-			# for example, sometimes 930/a = D8 ENG/S, while 995/k = D 8.02 SIPP
+			# if they are different, finding the more suitable one to be used as the book's class
+			# for example, sometimes 930/a = D8 ENG/S, while 995/k = D 8.02 SIPP for the same book
 			# from the above example, the 995/k subfield is preferred because it is in the right format (having '.')
 
 			for cls in classes:
@@ -55,7 +55,7 @@ try:
 						try:
 							k = cls.index('-')
 							for j in cls:
-								if(j=='-'): j==' '
+								if(j=='-'): j=' '
 							bookclass = cls
 							break
 						except ValueError as ve:

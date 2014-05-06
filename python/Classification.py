@@ -5,6 +5,14 @@ from array import *
 from collections import defaultdict
 
 
+def isSubcat(cls):
+	if(len(cls)>2): return True
+	else: return False
+
+def isCat(cls):
+	if(len(cls)==2): return True
+	else: return False
+
 def getclassificationrule():
 	f = open("../database/classification.txt","r")
 	categorylist = []
