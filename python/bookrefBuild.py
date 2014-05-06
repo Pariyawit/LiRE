@@ -55,7 +55,8 @@ try:
 						try:
 							k = cls.index('-')
 							for j in cls:
-								if(j=='-'): j=' '
+								if(j=='-'):
+									j = ' '
 							bookclass = cls
 							break
 						except ValueError as ve:
@@ -86,7 +87,6 @@ try:
 	session.close()
 	#print xml
 	session1.add("bookref.xml", xml)
-
 	#print xml
 	xml = xmldom.parseString(xml)
 	pretty_xml_as_string = xml.toprettyxml()

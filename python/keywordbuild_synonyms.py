@@ -24,7 +24,7 @@ stopwords_list_encoded = []
 for word in stopwords_list:
 	stopwords_list_encoded.append(word.decode('UTF-8'))
 
-#input is unstemmed word because nltk provide good dictionary
+#input is unstemmed word because nltk provide good englisth dictionary
 def en_synonyms(word):
 	synonyms = set()
 	synsets = wn.synsets(word)
@@ -34,7 +34,8 @@ def en_synonyms(word):
 	#print word,len(synonyms)
 	return synonyms
 
-#open database
+#another method is used for french word becuase ntlk doesn't have french dictionary
+#open database for french wordnet
 session_wordnet = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 session_wordnet.execute("open wordnetfrench")
 print session_wordnet.info()
@@ -65,11 +66,9 @@ def fr_synonyms(stemmed_word):
 try:
 	#create session
 	session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
-	#open database
+	#open database an run query to get all books within 'BSTB'
 	session.execute("open extraction")
 	print session.info()
-	
-	# run query on database, get all books
 	findref = '''declare namespace marcxml = "http://www.loc.gov/MARC21/slim";
 				for $record in //marcxml:record/*
 				where $record/marcxml:subfield[@code="e"]="BSTB"
@@ -110,6 +109,8 @@ try:
 			tmp = buff[lang_offset+1].split(".")
 			ref = buff[lang_offset+2]
 			if tmp[0][0].isdigit():
+				if(len(tmp[0])==1):
+					tmp[0] = '0'+tmp[0]
 				code = tmp[0]+'.'+tmp[1][0]
 				if code not in classifications :
 					classifications[code] = dict()
