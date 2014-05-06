@@ -55,7 +55,8 @@ try:
 						try:
 							k = cls.index('-')
 							for j in cls:
-								if(j=='-'): j==' '
+								if(j=='-'):
+									j = ' '
 							bookclass = cls
 							break
 						except ValueError as ve:
