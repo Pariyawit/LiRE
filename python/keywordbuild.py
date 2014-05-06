@@ -70,6 +70,8 @@ try:
 			tmp = buff[lang_offset+1].split(".")
 			ref = buff[lang_offset+2]
 			if tmp[0][0].isdigit():
+				if(len(tmp[0])==1):
+					tmp[0] = '0'+tmp[0]
 				code = tmp[0]+'.'+tmp[1][0]
 				if code not in classifications :
 					classifications[code] = dict()

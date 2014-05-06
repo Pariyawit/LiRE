@@ -1,7 +1,8 @@
 # -*- coding: UTF-8 -*-
 import BaseXClient
 import numpy
-
+from xml.etree import ElementTree
+import xml.dom.minidom as xmldom
 import os
 if (os.path.isdir("../database/")):
 	path = "../database/"
@@ -30,7 +31,7 @@ try:
 	
 	# run query on database, get all books noticekoha
 	findbookref = '''for $book in /Document/book
-						return ($book/text())'''
+						return ($book/noticekoha/text())'''
 	query_bookref = session.query(findbookref)
 
 	book_ref = dict()
@@ -92,24 +93,24 @@ for noticekoha_row, ref_row in book_ref.iteritems():
 	book.set('noticekoha',noticekoha_row)
 	for noticekoha_col, ref_col in book_ref.iteritems():
 		if(table[ref_row][ref_col]>0):
-			relatedTo = ElementTree.SubElement(relatedTo,"relatedTo")
+			relatedTo = ElementTree.SubElement(book,"relatedTo")
 			relatedTo.set('score',table[ref][key_ref])
 			relatedTo.text = noticekoha_col
 
 #free memory of table
-table = None
+#table = None
 
 tree = ElementTree.ElementTree(relatedBook)
 tree.write(path+'relatedBook.xml',encoding="UTF-8", xml_declaration=True)
 
 xml = xmldom.parse(path+'relatedBook.xml')
 pretty_xml_as_string = xml.toprettyxml()
-#print pretty_xml_as_string
-with open(outFile,"w") as f:
-	f.write(pretty_xml_as_string.encode('utf8'));
 
 session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 session.add("relatedBook", pretty_xml_as_string)
+#print pretty_xml_as_string
+with open(outFile,"w") as f:
+	f.write(pretty_xml_as_string.encode('utf8'));
 
 '''
 P = numpy.array(table)

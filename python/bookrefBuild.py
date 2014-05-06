@@ -119,7 +119,6 @@ try:
 	session.close()
 	#print xml
 	session1.add("bookref.xml", xml)
-
 	#print xml
 	xml = xmldom.parseString(xml)
 	pretty_xml_as_string = xml.toprettyxml()
