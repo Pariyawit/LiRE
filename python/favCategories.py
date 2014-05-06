@@ -2,16 +2,9 @@
 
 import BaseXClient
 import xml.dom.minidom as xmldom
+import Classification
 from array import *
 from collections import defaultdict
-
-def subcatToCat(category):
-	try:
-		buff = category.index('.')
-		buff = category.split('.')
-		return buff[0]
-	except ValueError as v:
-		return -1
 
 try:
 	session1 = BaseXClient.Session('localhost',1984,'admin','admin')
@@ -32,7 +25,7 @@ try:
 	for buff in f:
 		i = buff.index(' ')
 		catcode = buff[0:i]
-		if(subcatToCat(catcode) == -1): #This mean if it is not a subcategory
+		if(Classification.subcatToCat(catcode) == -1): #This mean if it is not a subcategory
 			parentcatcount[catcode] = defaultdict(int)
 		categorylist.append(catcode)
 	f.close()
@@ -63,7 +56,7 @@ try:
 	for typecode,ref in query_ref.iter():
 		if(ref=='$'):
 			category = buff[0]
-			parentcategory = subcatToCat(category)
+			parentcategory = Classification.subcatToCat(category)
 			season = buff[1:(len(buff)/2)+1]
 			count = buff[(len(buff)/2)+1:len(buff)]
 			#Store the computed value into dictionary F

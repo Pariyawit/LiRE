@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 import BaseXClient
+import Classification
 import xml.dom.minidom as xmldom
 from array import *
 from collections import defaultdict
@@ -27,24 +28,6 @@ def findSeason(date):
 		return year + "/2"
 	else: 
 		return year + "/3"
-
-# A method to clean the class received from query and transform to its category.
-# for example, "1.66 PENN" -> "01.6"
-def classtoCat(cls):
-	try:
-		split = cls.index(' ')
-	except ValueError as v:
-		try:
-			split = cls.index('-')
-		except ValueError as ve:
-			split = len(cls)
-	cls = cls[0:split]
-	if(cls.index('.') == 1 ):
-		cls = "0" + cls
-	pointIndex = cls.index('.')
-	cls = cls[0:pointIndex+2]
-	return cls
-
 
 try:
 	session1 = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
@@ -129,7 +112,7 @@ try:
 				for typecode,key in queryKeyword.iter():
 					if(key=='$'):
 						cls = tmp[len(tmp)-1]
-						cls = classtoCat(cls)
+						cls = Classification.classtoCategory(cls)
 						for keyword in range(0,len(tmp)-1):
 							userLKF[cls][tmp[keyword]] += 1
 						tmp = []
@@ -141,7 +124,7 @@ try:
 				for typecode,cls in queryClass.iter():
 					if(cls[0] == 'C' or cls[0] =='D' or cls[0]=='A'):
 						continue
-					cls = classtoCat(cls)
+					cls = Classification.classtoCategory(cls)
 					#Count the times of borrowing
 					userLF[cls][season] += 1
 				buff = []
