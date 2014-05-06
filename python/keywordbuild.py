@@ -14,6 +14,12 @@ if (os.path.isdir("../database/")):
 else:
 	outFile = "database/keywordXML.xml"
 
+def isValid(token):
+	for t in token:
+		if t in string.punctuation:
+			return False
+	return True
+
 en_stem = nltk.stem.snowball.SnowballStemmer("english")
 fr_stem = nltk.stem.snowball.SnowballStemmer("french")
 
@@ -110,7 +116,7 @@ try:
 				#remove stopwords before stem
 				filtered_tokens = [w for w in tokens if not w in stopwords_list_encoded]
 				for token in filtered_tokens:
-					if (token not in string.punctuation) and (len(token)>1) and not token.isdigit():
+					if (len(token)>1) and not token.isdigit() and isValid(token):
 						#different stem function for different lang
 						if("fre" in lang):
 							classifications[code][ref].add(fr_stem.stem(token))

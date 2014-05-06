@@ -2,6 +2,7 @@
 import BaseXClient
 import nltk
 import string
+import Classification
 #nltk.corpus stopwords download required
 from nltk.corpus import stopwords
 #nltk.corpus wordnet download required
@@ -23,6 +24,12 @@ stopwords_list_encoded = []
 
 for word in stopwords_list:
 	stopwords_list_encoded.append(word.decode('UTF-8'))
+
+def isValid(token):
+	for t in token:
+		if t in string.punctuation:
+			return False
+	return True
 
 #input is unstemmed word because nltk provide good englisth dictionary
 def en_synonyms(word):
@@ -70,15 +77,17 @@ try:
 	session.execute("open extraction")
 	print session.info()
 	findref = '''declare namespace marcxml = "http://www.loc.gov/MARC21/slim";
-				for $record in //marcxml:record/*
-				where $record/marcxml:subfield[@code="e"]="BSTB"
-				and contains($record/marcxml:subfield[@code="k"]/text(),".")
-				return ($record/../marcxml:datafield[@tag="101"]/marcxml:subfield[@code="a"]/text(),"#",
-						$record/marcxml:subfield[@code="k"]/text(),
-						$record/../marcxml:controlfield[@tag="001"]/text(),
-						$record/../marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"]/text(),
-						$record/../marcxml:datafield[@tag="200"]/marcxml:subfield[@code="e"]/text(),
-						"$")'''
+					for $record in //marcxml:record
+					where $record/marcxml:datafield[@tag="995"]/marcxml:subfield[@code="e"]="BSTB"
+					and $record/marcxml:datafield[@tag="995"]/marcxml:subfield[@code="r"]="OUV"
+					and $record/marcxml:datafield[@tag="930"]/marcxml:subfield[@code="a"]/text()[contains(.,".")]
+					return (distinct-values($record/marcxml:datafield[@tag="995"]/marcxml:subfield[@code="k"]/text()),
+					distinct-values($record/marcxml:datafield[@tag="930"]/marcxml:subfield[@code="a"]/text()),"#",
+					$record/marcxml:datafield[@tag="101"]/marcxml:subfield[@code="a"]/text(),"##",
+					$record/marcxml:controlfield[@tag="001"]/text(),
+					$record/marcxml:datafield[@tag="200"]/marcxml:subfield[@code="a"]/text(),
+					$record/marcxml:datafield[@tag="200"]/marcxml:subfield[@code="e"]/text(),
+					"$")'''
 
 	query_ref = session.query(findref)
 	buff = []
@@ -102,48 +111,70 @@ try:
 			print buff
 			#print '---------------------------'
 			# sign '#' means end of language section of the book
-			lang_offset = buff.index("#")
+			classes = buff[0:buff.index('#')]
+			bookclass=""
+			#print classes
+			for cls in classes:
+				try:
+					cls = Classification.classtrim(cls)
+					if(cls == ValueError): continue
+					try:
+						k = cls.index('.')
+						try:
+							k = cls.index('-')
+							for j in cls:
+								if(j=='-'):
+									j = ' '
+							bookclass = cls
+							break
+						except ValueError as ve:
+							bookclass = cls
+							break
+					except ValueError as ve:
+						continue
+				except ValueError as ve:
+					continue
+
+			#print bookclass
+			lang_offset = buff.index("##")
 			lang = []
 			for i in range(0,lang_offset):
 				lang.append(buff[i])
-			tmp = buff[lang_offset+1].split(".")
-			ref = buff[lang_offset+2]
-			if tmp[0][0].isdigit():
-				if(len(tmp[0])==1):
-					tmp[0] = '0'+tmp[0]
-				code = tmp[0]+'.'+tmp[1][0]
-				if code not in classifications :
-					classifications[code] = dict()
 
-				#keyword for a book of 'code'&'ref', set() for non-duplicate
-				if ref not in classifications[code] :
-					classifications[code][ref] = set()
+			code = str(Classification.classToCategory(bookclass).encode('utf8'))
+			if code not in classifications :
+				classifications[code] = dict()
 
-				for i in range(lang_offset+3,len(buff)):
-					tokens = wpt.tokenize(buff[i])
-					#remove stopwords before stem
-					filtered_tokens = [w for w in tokens if not w in stopwords_list_encoded]
-					for token in filtered_tokens:
-						valid = True
-						for t in token:
-							if t in string.punctuation:
-								valid &= False
+			#keyword for a book of 'code'&'ref', set() for non-duplicate
+			ref = buff[lang_offset+1]
+			if ref not in classifications[code] :
+				classifications[code][ref] = set()
+			print code,ref
+			for i in range(lang_offset+2,len(buff)):
+				tokens = wpt.tokenize(buff[i])
+				#remove stopwords before stem
+				filtered_tokens = [w for w in tokens if not w in stopwords_list_encoded]
+				for token in filtered_tokens:
+					#use only token that doesn't have punctuation
 
-						if valid and (token not in string.punctuation) and (len(token)>1) and not token.isdigit() and (',' not in token):
-							#different stem function for different lang
-							#if both fre and eng appear in lang, use both stem function becuase the book's title/description lanuage is unknown
-							if("fre" in lang):
-								synsets = fr_synonyms(fr_stem.stem(token))
-								for syn in synsets:
+					if (token not in string.punctuation) and (len(token)>1) and not token.isdigit():
+						#different stem function for different lang
+						#if both fre and eng appear in lang, use both stem function becuase the book's title/description language is unknown
+						if("fre" in lang):
+							synsets = fr_synonyms(fr_stem.stem(token))
+							for syn in synsets:
+								if(isValid(syn)):
 									classifications[code][ref].add(fr_stem.stem(syn))
-							if("eng" in lang):
-								synsets = en_synonyms(token)
-								for syn in synsets:
+						if("eng" in lang):
+							synsets = en_synonyms(token)
+							for syn in synsets:
+								if(isValid(syn)):
 									classifications[code][ref].add(en_stem.stem(syn))
-							elif("fre" not in lang):
-								print '------NOT IN BOTH'
-								synsets = en_synonyms(token)
-								for syn in synsets:
+						elif("fre" not in lang):
+							print '------NOT IN BOTH'
+							synsets = en_synonyms(token)
+							for syn in synsets:
+								if(isValid(syn)):
 									classifications[code][ref].add(en_stem.stem(syn))
 			buff = []
 			continue
@@ -166,6 +197,13 @@ try:
 	print 'making xml file...'
 	tree = ElementTree.ElementTree(keywordXML)
 	tree.write("../database/keywordXML_syn.xml",encoding="UTF-8", xml_declaration=True)
+
+	xmlstr = ElementTree.tostring(tree.getroot(), encoding='utf8', method='xml')
+	session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
+	# create empty database
+	session.execute("create db keywordXML_syn")
+	session.add("keywordXML_syn.xml", xmlstr)
+	session.close()
 
 	# -----------!!!-------------MEMORY ERROR after this...-----------!!!-------------
 	xml = xmldom.parse("../database/keywordXML_syn.xml")

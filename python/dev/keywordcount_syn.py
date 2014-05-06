@@ -34,13 +34,8 @@ try:
 	f = open(path+"keywordcount_syn.txt",'wb')
 	for w in sorted(keywords, key=keywords.get, reverse=True):
 		#print w.encode('UTF-8'),',',keywords[w]
-		valid = True
-		for s in string.punctuation:
-			if s in w:
-				valid &= False
-		if valid:
-			s = w.encode('UTF-8')+','+str(keywords[w])+'\n'
-			f.write(s)
+		s = w.encode('UTF-8')+','+str(keywords[w])+'\n'
+		f.write(s)
 
 except IOError as e:
 	# print exception

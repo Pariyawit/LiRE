@@ -103,6 +103,14 @@ for noticekoha_row, ref_row in book_ref.iteritems():
 tree = ElementTree.ElementTree(relatedBook)
 tree.write(path+'relatedBook.xml',encoding="UTF-8", xml_declaration=True)
 
+xmlstr = ElementTree.tostring(tree.getroot(), encoding='utf8', method='xml')
+session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
+# create empty database
+session.execute("create db relatedBook")
+session.add("relatedBook.xml", xmlstr)
+session.close()
+
+
 xml = xmldom.parse(path+'relatedBook.xml')
 pretty_xml_as_string = xml.toprettyxml()
 
