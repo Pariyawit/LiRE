@@ -5,6 +5,15 @@ from array import *
 from collections import defaultdict
 
 
+def getclassificationrule():
+	f = open("../database/classification.txt","r")
+	categorylist = []
+	for buff in f:
+		i = buff.index(' ')
+		catcode = buff[0:i]
+		categorylist.append(catcode)
+	return categorylist
+
 # This method transform a subcategory to its parent category
 # for example, "01.6" -> "01"
 def subcatToCat(category):
@@ -18,7 +27,6 @@ def subcatToCat(category):
 # A method to clean the class received from query and transform to its category.
 # for example, "1.66 PENN" -> "01.6"
 def classToCategory(cls):
-	tmp = cls
 	try:
 		split = cls.index(' ')
 	except ValueError as v:
@@ -26,12 +34,11 @@ def classToCategory(cls):
 			split = cls.index('-')
 		except ValueError as ve:
 			split = len(cls)
-	#print "--->" + cls.encode('utf8')
 	cls = cls[0:split]
 	try:
 		split = cls.index('.')
 	except ValueError as ve:
-		return 'N'
+		return 'ERROR'
 	if(cls.index('.') == 1 ):
 		cls = "0" + cls
 	pointIndex = cls.index('.')

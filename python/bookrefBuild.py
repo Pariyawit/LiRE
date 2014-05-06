@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import BaseXClient
+import Classification
 import xml.dom.minidom as xmldom
 from array import *
 
@@ -36,9 +37,8 @@ try:
 		if(ref=='$'):
 			classes = buff[0:buff.index('#')]
 			bookclass = ""
-			noticekoha = buff[len(buff)-2]
-			title = buff[len(buff)-1]
-
+			noticekoha = buff[buff.index('#')+1]
+			title = buff[buff.index('#')+2]
 
 			# Clean book's class by comparing the 930/a subfields with 995/k subfields ( both 930/a and 995/k can be replicated)
 			# because sometimes these fields are correspond to different value, even though it should always be the same
@@ -48,7 +48,7 @@ try:
 
 			for cls in classes:
 				try:
-					cls = classtrim(cls)
+					cls = Classification.classtrim(cls)
 					if(cls == ValueError): continue
 					try:
 						k = cls.index('.')
@@ -60,6 +60,7 @@ try:
 							break
 						except ValueError as ve:
 							bookclass = cls
+							break
 					except ValueError as ve:
 						continue
 				except ValueError as ve:
@@ -68,12 +69,14 @@ try:
 				print classes
 			#print bookclass.encode('utf8')
 			
+			if(noticekoha == "2109"): print classes
+
 			#print buff
 			buff = []
 			xml += '<book class="'+str(bookclass.encode('utf8'))+'">'
 			xml += '<title>'+str(title.encode('utf8'))+'</title>'
 			xml += '<noticekoha>'+str(noticekoha.encode('utf8'))+'</noticekoha>'
-			xml += '<category>'+str(classToCategory(bookclass).encode('utf8'))+'</category>'
+			xml += '<category>'+str(Classification.classToCategory(bookclass).encode('utf8'))+'</category>'
 			xml += '</book>'
 		else:
 			buff.append(ref);
