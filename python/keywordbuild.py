@@ -125,7 +125,20 @@ try:
 			buff = []
 			continue
 		buff.append(output)
-		
+
+	xml = "<keywordXML>"
+	for codes in classifications.iterkeys() :
+		xml += '<classification code="'+codes+'">'
+		for ref in classifications[codes].iterkeys() :
+			xml += '<book noticekoha="'+ref+'">'
+			for token in classifications[codes][ref] :
+				xml += '<keyword>'+token+'</keyword>'
+			xml += '</book>'
+		xml += '</classification>'
+	xml += '</keywordXML>'
+	
+	"""
+	#use ElementTree to make XML
 	keywordXML = ElementTree.Element("keywordXML")
 	for codes in classifications.iterkeys() :
 		classification = ElementTree.SubElement(keywordXML,"classification")
@@ -137,17 +150,18 @@ try:
 				keyword = ElementTree.SubElement(book,"keyword")
 				keyword.text = token
 
-
-
 	tree = ElementTree.ElementTree(keywordXML)
 	tree.write(outFile,encoding="UTF-8", xml_declaration=True)
 
 	xmlstr = ElementTree.tostring(tree.getroot(), encoding='utf8', method='xml')
+	"""
 	session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 	# create empty database
 	session.execute("create db keywordXML")
-	session.add("keywordXML.xml", xmlstr)
+	session.add("keywordXML.xml", xml)
 	session.close()
+	with open(outFile,"w") as f:
+		f.write(xml.encode('utf8'));
 
 except IOError as e:
 	# print exception

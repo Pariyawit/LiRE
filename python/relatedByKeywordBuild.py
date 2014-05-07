@@ -94,15 +94,18 @@ for noticekoha_row, ref_row in book_ref.iteritems():
 	book = ElementTree.SubElement(relatedBook,"book")
 	book.set('noticekoha',noticekoha_row)
 	for noticekoha_col, ref_col in book_ref.iteritems():
-		if(table[ref_row][ref_col]>0):
+		if(int(table[ref_row][ref_col])>0):
+			print table[ref_row][ref_col],ref_row,ref_col
 			relatedTo = ElementTree.SubElement(book,"relatedTo")
-			relatedTo.set('score',table[ref][key_ref])
+			relatedTo.set('score',str(table[ref_row][ref_col]))
 			relatedTo.text = noticekoha_col
 
 #free memory of table
 #table = None
 
 tree = ElementTree.ElementTree(relatedBook)
+
+print "writing xml"
 tree.write(path+'relatedBook.xml',encoding="UTF-8", xml_declaration=True)
 
 xmlstr = ElementTree.tostring(tree.getroot(), encoding='utf8', method='xml')
