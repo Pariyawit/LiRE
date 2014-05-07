@@ -125,7 +125,7 @@ try:
 			buff = []
 			continue
 		buff.append(output)
-
+		
 	keywordXML = ElementTree.Element("keywordXML")
 	for codes in classifications.iterkeys() :
 		classification = ElementTree.SubElement(keywordXML,"classification")
