@@ -8,20 +8,22 @@
 		$loan_num = book_loan_time($_GET['ref']);
 	
 		$borrowers = get_borrower($_GET['ref']);
-		$related_books = array();
+		$borrower_books = array();
 		foreach ($borrowers as $borrower) {
 			$books = get_books($borrower);
 			foreach ($books as $book) {
 				if (in_array($book[0], $_SESSION['classification'])){
-					array_push($related_books,$book);
+					array_push($borrower_books,$book);
 				}
 			}
 		}
 		#remove redundancy
-		$related_books = array_map("unserialize", array_unique(array_map("serialize", $related_books)));
+		$borrower_books = array_map("unserialize", array_unique(array_map("serialize", $borrower_books)));
+
+		$related_books = getRelatedBook($_GET['ref']);
 	}
 	/*
-	foreach ($related_books as $book) {
+	foreach ($borrower_books as $book) {
 		echo $book[0]."    ".$book[1]."<br>";
 	}
 	*/
@@ -76,7 +78,7 @@
 						<thead><tr><th>People who borrow this also borrow</th></tr></thead>
 						<tbody>
 						<?php
-							foreach ($related_books as $book) {
+							foreach ($borrower_books as $book) {
 								if($book[0] != ($_GET['ref']))
 								echo '<tr><td><a href="bookdetail.php?ref='.$book[0].'"><div>'.$book[1].'</div></a></td></tr>';
 							}
@@ -84,8 +86,24 @@
 						</tbody>
 					</table>
 				</div>
+			</div> <!-- row -->
+			<div class="row">
+				<table class="table table-condensed">
+						<thead><tr><th>Some 'maybe' Related Book</th></tr></thead>
+						<tbody>
+						<?php
+							$i=0;
+							foreach ($related_books as $book_ref) {
+								if($book_ref != ($_GET['ref'])){
+									echo '<tr><td><a href="bookdetail.php?ref='.$book_ref.'"><div>'.getBookName($book_ref).'</div></a></td></tr>';
+									$i = $i+1;
+									if($i>=10)break;
+								}
+							}
+						?>
+						</tbody>
+					</table>
 			</div>
-
 		</div> <!-- /container -->
 	</body>
 

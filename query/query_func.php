@@ -256,5 +256,54 @@ function userCheck($id){
 	}
 }
 
+function getRelatedBook($noticekoha){
+	try {
+		$input = 'for $book in relatedBook/book
+					where data($book/@noticekoha)="'.$noticekoha.'"
+					return for $relate in $book/relatedTo
+					order by $relate/@score descending
+					return $relate/text()';
+		if(!isset($session)){
+			$session = new Session("localhost", "1984", "admin", "admin");
+		}
+		$session->execute('OPEN relatedBook');
+		$query = $session->query($input);
+		$results = array();
+		while($query->more()){
+			array_push($results,$query->next());
+		}
+		// close query instance
+		$query->close();
+		return $results;
+
+	} catch (Exception $e) {
+		// print exception
+		print $e->getMessage();
+		print "<br>Exception";
+	}
+}
+
+function getBookName($noticekoha){
+	try {
+		$input = 'for $book in Document/book
+					where $book/noticekoha/text() = "'.$noticekoha.'"
+					return $book/title/text()';
+		if(!isset($session)){
+			$session = new Session("localhost", "1984", "admin", "admin");
+		}
+		$session->execute('OPEN bookref');
+		$query = $session->query($input);
+		$result = $query->next();
+		// close query instance
+		$query->close();
+		return $result;
+
+	} catch (Exception $e) {
+		// print exception
+		print $e->getMessage();
+		print "<br>Exception";
+	}
+}
+
 
 ?>

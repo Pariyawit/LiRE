@@ -94,8 +94,8 @@ for noticekoha_row, ref_row in book_ref.iteritems():
 	book = ElementTree.SubElement(relatedBook,"book")
 	book.set('noticekoha',noticekoha_row)
 	for noticekoha_col, ref_col in book_ref.iteritems():
-		if(int(table[ref_row][ref_col])>0):
-			print table[ref_row][ref_col],ref_row,ref_col
+		if(int(table[ref_row][ref_col])>9):
+			#print table[ref_row][ref_col],ref_row,ref_col
 			relatedTo = ElementTree.SubElement(book,"relatedTo")
 			relatedTo.set('score',str(table[ref_row][ref_col]))
 			relatedTo.text = noticekoha_col
