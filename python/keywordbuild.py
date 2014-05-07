@@ -80,6 +80,7 @@ try:
 					if(cls == ValueError): continue
 					try:
 						k = cls.index('.')
+						if(k>2): continue
 						try:
 							k = cls.index('-')
 							for j in cls:

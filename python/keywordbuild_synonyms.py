@@ -10,6 +10,12 @@ from nltk.corpus import wordnet as wn
 from xml.etree import ElementTree
 import xml.dom.minidom as xmldom
 
+import os
+if (os.path.isdir("../database/")):
+	outFile = "../database/keywordXML_syn.xml"
+else:
+	outFile = "database/keywordXML_syn.xml"
+
 en_stem = nltk.stem.snowball.SnowballStemmer("english")
 fr_stem = nltk.stem.snowball.SnowballStemmer("french")
 
@@ -120,6 +126,7 @@ try:
 					if(cls == ValueError): continue
 					try:
 						k = cls.index('.')
+						if(k>2): continue
 						try:
 							k = cls.index('-')
 							for j in cls:
@@ -182,6 +189,7 @@ try:
 
 	print 'pushing xml...'
 	#put all result to xml format
+	"""
 	keywordXML = ElementTree.Element("keywordXML")
 	for codes in classifications.iterkeys() :
 		classification = ElementTree.SubElement(keywordXML,"classification")
@@ -199,17 +207,32 @@ try:
 	tree.write("../database/keywordXML_syn.xml",encoding="UTF-8", xml_declaration=True)
 
 	xmlstr = ElementTree.tostring(tree.getroot(), encoding='utf8', method='xml')
+	"""
+	xml = "<keywordXML>"
+	for codes in classifications.iterkeys() :
+		xml += '<classification code="'+codes+'">'
+		for ref in classifications[codes].iterkeys() :
+			xml += '<book noticekoha="'+ref+'">'
+			for token in classifications[codes][ref] :
+				xml += '<keyword>'+token+'</keyword>'
+			xml += '</book>'
+		xml += '</classification>'
+	xml += '</keywordXML>'
+
 	session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 	# create empty database
 	session.execute("create db keywordXML_syn")
-	session.add("keywordXML_syn.xml", xmlstr)
+	session.add("keywordXML_syn.xml", xml)
 	session.close()
 
+	with open(outFile,"w") as f:
+		f.write(xml.encode('utf8'));
+
 	# -----------!!!-------------MEMORY ERROR after this...-----------!!!-------------
-	xml = xmldom.parse("../database/keywordXML_syn.xml")
+	xml = xmldom.parse(outFile)
 	pretty_xml_as_string = xml.toprettyxml()
 	#print pretty_xml_as_string
-	with open("../database/keywordXML_syn.xml","w") as f:
+	with open(outFile,"w") as f:
 		f.write(pretty_xml_as_string.encode('utf8'));
 
 	#print classifications
