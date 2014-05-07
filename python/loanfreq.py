@@ -99,7 +99,7 @@ try:
 
 				findClass = '''for $b in /Document/*
 							where $b/noticekoha="'''+bookid+'''"
-							return data($b/@class)'''
+							return $b/category/text()'''
 				queryClass = session3.query(findClass)
 
 				findKeyword = '''for $c in /keywordXML/classification/*
@@ -112,7 +112,7 @@ try:
 				for typecode,key in queryKeyword.iter():
 					if(key=='$'):
 						cls = tmp[len(tmp)-1]
-						cls = Classification.classtoCategory(cls)
+						cls = Classification.classToCategory(cls)
 						for keyword in range(0,len(tmp)-1):
 							userLKF[cls][tmp[keyword]] += 1
 						tmp = []
@@ -122,10 +122,6 @@ try:
 
 				#Find class of the borrowed book			
 				for typecode,cls in queryClass.iter():
-					if(cls[0] == 'C' or cls[0] =='D' or cls[0]=='A'):
-						continue
-					cls = Classification.classtoCategory(cls)
-					#Count the times of borrowing
 					userLF[cls][season] += 1
 				buff = []
 			else:
