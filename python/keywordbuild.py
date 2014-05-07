@@ -129,7 +129,7 @@ try:
 	keywordXML = ElementTree.Element("keywordXML")
 	for codes in classifications.iterkeys() :
 		classification = ElementTree.SubElement(keywordXML,"classification")
-		classification.set('code',codes)
+		classification.set('code',str(codes))
 		for ref in classifications[codes].iterkeys() :
 			book = ElementTree.SubElement(classification,"book")
 			book.set('noticekoha',ref)
@@ -139,14 +139,25 @@ try:
 
 
 
+
 	tree = ElementTree.ElementTree(keywordXML)
+
 	tree.write(outFile,encoding="UTF-8", xml_declaration=True)
 
+
 	xmlstr = ElementTree.tostring(tree.getroot(), encoding='utf8', method='xml')
+
+
+	xmlstr = xmldom.parse(outFile)
+	pretty_xml_as_string = xmlstr.toprettyxml()
 	session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 	# create empty database
 	session.execute("create db keywordXML")
-	session.add("keywordXML.xml", xmlstr)
+	session.add("keywordXML.xml", pretty_xml_as_string)
+
+	with open(outFile,"w") as f:
+		f.write(pretty_xml_as_string.encode('utf8'));
+
 	session.close()
 
 except IOError as e:
