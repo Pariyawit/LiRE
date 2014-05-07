@@ -52,6 +52,7 @@ try:
 					if(cls == ValueError): continue
 					try:
 						k = cls.index('.')
+						if(k>2): continue
 						try:
 							k = cls.index('-')
 							for j in cls:
@@ -69,8 +70,6 @@ try:
 			else:
 				print classes
 			#print bookclass.encode('utf8')
-			
-			if(noticekoha == "2109"): print classes
 
 			#print buff
 			buff = []

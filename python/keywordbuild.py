@@ -142,7 +142,7 @@ try:
 	keywordXML = ElementTree.Element("keywordXML")
 	for codes in classifications.iterkeys() :
 		classification = ElementTree.SubElement(keywordXML,"classification")
-		classification.set('code',codes)
+		classification.set('code',str(codes))
 		for ref in classifications[codes].iterkeys() :
 			book = ElementTree.SubElement(classification,"book")
 			book.set('noticekoha',ref)
@@ -151,17 +151,28 @@ try:
 				keyword.text = token
 
 	tree = ElementTree.ElementTree(keywordXML)
+
 	tree.write(outFile,encoding="UTF-8", xml_declaration=True)
 
+
 	xmlstr = ElementTree.tostring(tree.getroot(), encoding='utf8', method='xml')
+
 	"""
 	session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 	# create empty database
 	session.execute("create db keywordXML")
 	session.add("keywordXML.xml", xml)
 	session.close()
+
 	with open(outFile,"w") as f:
 		f.write(xml.encode('utf8'));
+
+	xmlstr = xmldom.parse(outFile)
+	pretty_xml_as_string = xmlstr.toprettyxml()
+
+	with open(outFile,"w") as f:
+		f.write(pretty_xml_as_string.encode('utf8'));
+	
 
 except IOError as e:
 	# print exception
