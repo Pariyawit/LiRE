@@ -10,7 +10,7 @@ else:
 	path = "database/"
 
 keyword_ref = dict()
-lower_bound = 3
+lower_bound = 6
 i=0
 with open(path+'keywordcount_syn.txt',"r") as f:
 	for line in f:
@@ -38,13 +38,14 @@ try:
 	i=0
 	for typecode, noticekoha in query_bookref.iter():
 		if(noticekoha not in book_ref):
-			book_ref[int(noticekoha)] = i
+			book_ref[noticekoha] = i
 			i+=1
 
 except IOError as e:
 	# print exception
 	print e
 
+print "i = ",i
 print 'keyword :',len(keyword_ref)
 print 'book :',len(book_ref)
 
@@ -68,25 +69,26 @@ try:
 
 	for typecode, out in query_bookref.iter():
 		if(out.isdigit()):
-			noticekoha = int(out)
-			#print "NOTICE : ",noticekoha
-			if noticekoha not in book_ref:
-				noticekoha = False
-		elif noticekoha:
-			#print out.encode('UTF-8')
+			noticekoha = out
+		else:
 			if (out.encode('UTF-8') in keyword_ref):
-				#print "key : ",keyword_ref[out.encode('UTF-8')]
+				if out.encode('UTF-8') not in keyword_ref :
+					print "keyword not in"
+				if noticekoha not in book_ref:
+					print "noticekoha not in"
+					print "==",noticekoha
+					continue
 				table[book_ref[noticekoha]][keyword_ref[out.encode('UTF-8')]] = 1
 except IOError as e:
 	print e
 
 print "Calculating table x table.T..."
-
 table = table.dot(table.T)
 #print "calculating the second time"
 #table = table.dot(table.T)
 #result is matrix of book x book which [i][j] is number of common keyword of book i and book j
 
+print "making xml"
 relatedBook = ElementTree.Element("relatedBook")
 for noticekoha_row, ref_row in book_ref.iteritems():
 	book = ElementTree.SubElement(relatedBook,"book")
