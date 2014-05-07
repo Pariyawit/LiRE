@@ -129,7 +129,7 @@ try:
 
 	xml = "<keywordXML>"
 	for codes in classifications.iterkeys() :
-		xml += '<classification code="'+codes+'">'
+		xml += '<classification code="'+str(codes)+'">'
 		for ref in classifications[codes].iterkeys() :
 			xml += '<book noticekoha="'+ref+'">'
 			for token in classifications[codes][ref] :
@@ -161,7 +161,7 @@ try:
 	"""
 	session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 	# create empty database
-	session.execute("create db keywordXML")
+	session.execute("create db keyword")
 	session.add("keywordXML.xml", xml)
 	session.close()
 

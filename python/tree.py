@@ -7,10 +7,14 @@ from array import *
 
 
 class Categorytree(object):
-	def getParent(nodename):
+	def getParent(self, nodename):
 		return self.parentlist[nodename]
-	def getChild(nodename):
+	def getChild(self, nodename):
 		return self.childlist[nodename]
+	def getSibling(self, nodename):
+		self.parent = self.parentlist[nodename]
+		self.sibling = self.getChild(self.parent)
+		return self.sibling
 	def __init__(self):
 		self.childlist = {}
 		self.parentlist = {}
@@ -26,4 +30,3 @@ class Categorytree(object):
 				self.parentlist[catnode] = self.parentnode
 				self.childlist[self.parentnode].append(catnode) 
 
-Cat = Categorytree()
