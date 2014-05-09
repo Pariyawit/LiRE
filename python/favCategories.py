@@ -3,6 +3,7 @@
 import BaseXClient
 import xml.dom.minidom as xmldom
 import Classification
+import Tree
 from array import *
 from collections import defaultdict
 
@@ -10,25 +11,18 @@ try:
 	session1 = BaseXClient.Session('localhost',1984,'admin','admin')
 	session1.execute('open loanfreq')
 	print session1.info()
-	userID = 10023
+	userID = 1385
 
 	#Prepare the dictionary F (F stands for Favourite Categories)
-	F = {}
 	F = defaultdict(float)
+
+	#Get a list of categories 
+	categorylist = Classification.getclassificationrule()
 
 	#Declare an 2-dim dictionary used to store amount of time the user borrows a level-1 category's book during season
 	parentcatcount = {}
-
-	#Get a list of categories from file
-	categorylist = []
-	f = open('../database/classification.txt','r')
-	for buff in f:
-		i = buff.index(' ')
-		catcode = buff[0:i]
-		if(Classification.subcatToCat(catcode) == -1): #This mean if it is not a subcategory
-			parentcatcount[catcode] = defaultdict(int)
-		categorylist.append(catcode)
-	f.close()
+	for cat in categorylist:
+		parentcatcount[cat] = defaultdict(int)
 
 	#Get the season scaling array
 	seasonscaling = {}
@@ -53,10 +47,11 @@ try:
 
 	#Get the results and do the computation for subcategories
 	buff = []
+	cattree = Tree.Categorytree()
 	for typecode,ref in query_ref.iter():
 		if(ref=='$'):
 			category = buff[0]
-			parentcategory = Classification.subcatToCat(category)
+			parentcategory = cattree.getParent(category)
 			season = buff[1:(len(buff)/2)+1]
 			count = buff[(len(buff)/2)+1:len(buff)]
 			#Store the computed value into dictionary F
@@ -75,11 +70,10 @@ try:
 		if(parentcatcount[cat]!={}):
 			totalcount = 0
 			for k in parentcatcount[cat]:
-				totalcount += parentcatcount[cat][k]
-			F[cat] += float(totalcount)*(float(1)/2)**float(seasonscaling[k])
+				F[cat] += float(parentcatcount[cat][k])*(float(1)/2)**float(seasonscaling[k])
 			
-	#for cat in F:
-	#	print cat,'---',F[cat]
+	for cat in categorylist:
+		print cat," - ",F[cat]
 
 	session1.close()
 except IOError as e:
