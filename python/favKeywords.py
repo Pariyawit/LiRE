@@ -6,7 +6,7 @@ import Classification
 from array import *
 from collections import defaultdict
 
-def findfavkeywords(uesrID):
+def findfavkeywords(userID):
 	try:
 		session1 = BaseXClient.Session('localhost',1984,'admin','admin')
 		session2 = BaseXClient.Session('localhost',1984,'admin','admin')

@@ -17,7 +17,7 @@ def bookselection(userID, I):
 		recommend = {}
 		categorylist = Classification.getclassificationrule()
 		for cat in categorylist:
-			recommend[cat] = Set()
+			recommend[cat] = defaultdict(float)
 
 		for cat in I:
 			find_ref = '''for $book in //keywordXML/classification/*
@@ -26,11 +26,13 @@ def bookselection(userID, I):
 			query_ref = session1.query(find_ref)
 			buff = []
 			for typecode,ref in query_ref.iter():
-				if(buff!='$'):
+				if(ref=='$'):
 					noticekoha = buff[0]
 					for keyword in buff[1:len(buff)-1]:
-						if(I[cat][keyword] > 2):
-							recommend[cat].add(noticekoha)
+						if(I[cat][keyword] > 4.0):
+							if(I[cat][keyword] > recommend[cat][noticekoha]):
+								recommend[cat][noticekoha] = I[cat][keyword]
+								
 					buff = []
 				else:
 					buff.append(ref)
