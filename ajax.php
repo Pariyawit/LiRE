@@ -4,14 +4,16 @@ if (isset($_POST['action'])) {
         case 'create':
             create();
             break;
-        case 'select':
-            select();
+        case 'recommend':
+            recommend(($_POST['UserID']);
             break;
     }
 }
 
-function select() {
-    echo "The select function is called.";
+function recommend($UserID) {
+    echo "The recommend function is called.";
+    $results = exec('python python/getRecomdationMatrix.py '.$UserID);
+    #return $results;
     exit;
 }
 

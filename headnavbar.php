@@ -1,7 +1,12 @@
 <?php
 
-$menus = array('Home','Classification','History');
-$files = array('index','classification','history')
+if($_SESSION['UserID'] == false){
+	$menus = array('Home','Classification');
+}
+else{
+	$menus = array('Home','Classification','History','Recommendation');
+}
+$files = array('index','classification','history','Recommendation')
 
 ?>
 
@@ -23,7 +28,7 @@ $files = array('index','classification','history')
 		<!--div class=""-->
 			<ul class="nav navbar-nav">
 				<?php
-					for ($i=0 ;$i<count($files);$i=$i+1) {
+					for ($i=0 ;$i<count($menus);$i=$i+1) {
 						if($menus[$i] == $current_page) echo '<li class="active"><a href="'.$files[$i].'.php">'.$menus[$i].'</a></li>';
 						else echo '<li><a href="'.$files[$i].'.php">'.$menus[$i].'</a></li>';
 					}

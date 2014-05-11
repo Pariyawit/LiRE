@@ -93,7 +93,7 @@ table = table.dot(table.T)
 #table = table.dot(table.T)
 #result is matrix of book x book which [i][j] is number of common keyword of book i and book j
 print "saving matrix"
-numpy.savetxt(path+"relatedMatrix.txt",table,fmt="%d",delimiter=",",newline="\n")
+numpy.savetxt(path+"relatedMatrix.txt",table,fmt="%d",delimiter=",",newline="\n",header=str(table.shape))
 
 print "pushing top 10"
 relatedBookResults = dict()

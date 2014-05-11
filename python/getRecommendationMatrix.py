@@ -11,12 +11,18 @@ if (os.path.isdir("../database/")):
 else:
 	path = "database/"
 
+import sys
+
+#MUST comment all 'print' except the last one for php result
+
+codebarrelecteur = sys.argv[1]
+#codebarrelecteur="201221459"
+
 try:
 	session = BaseXClient.Session('localhost',1984,'admin','admin')
 	session.execute("open historique")
-	print session.info()
+	#print session.info()
 	# run query on database, get books that have borrowed
-	codebarrelecteur="000014880"
 	findref = '''for $x in historique/transaction
 					where $x/codebarrelecteur="'''+codebarrelecteur+'''"
 					return $x/noticekoha/text()'''
@@ -26,7 +32,7 @@ try:
 	loan_history = set()
 	for typecode, out in query_ref.iter():
 		loan_history.add(out)
-	print loan_history
+	#print loan_history
 
 	key_noticekoha = dict()
 	noticekoha_key = dict()
@@ -34,31 +40,26 @@ try:
 		for line in f:
 			tmp = line.split(',')
 			tmp[1] = tmp[1].strip()
-			#print "--",tmp[0],"--",tmp[1].strip()
+			##print "--",tmp[0],"--",tmp[1].strip()
 			noticekoha_key[tmp[0]] = tmp[1]
 			key_noticekoha[tmp[1]] = tmp[0]
 
-	
-	print "making relatedMatrix"
-	relatedMatrix = numpy.loadtxt(path+"relatedMatrix.txt",delimiter=",",dtype="int32")
-	dimension = relatedMatrix.shape
-	
-
-	print "making userMatrix"
-	user_matrix = [0]*dimension[0]
-	#user_matrix = [0]*12000
-
-	
+	user_matrix = []
+	usecols = []
 	for book in loan_history:
-		#print type(tmp[0])
 		if str(book) in noticekoha_key:
-			print book,noticekoha_key[str(book)]
-			user_matrix[int(noticekoha_key[str(book)])] = 1
+			matrix_ref = int(noticekoha_key[str(book)])
+			usecols.append(matrix_ref)
+			user_matrix.append(1)
+
+	#get relatedMatrix only column of book that the user have borrowed
+	relatedMatrix = numpy.loadtxt(path+"relatedMatrix.txt",delimiter=",",dtype="int32",usecols=usecols)
+	dimension = relatedMatrix.shape
 
 	user_matrix = numpy.array(user_matrix)
 	resultMatrix = relatedMatrix.dot(user_matrix)
-
-	print "pushing top 10"
+	
+	#print "pushing top 10"
 	resultQueue=Queue.PriorityQueue(maxsize=10)
 	i = 0
 	for score in numpy.nditer(resultMatrix):
@@ -78,9 +79,14 @@ try:
 	resultList = []
 	while (resultQueue.qsize() > 0):
 		tmp = resultQueue.get()
+		#print tmp
 		resultList.append(tmp[1])
 
-	print resultList
-	print i,dimension,resultMatrix.shape
+	#print resultList
+	out_string = ""
+	for result in resultList:
+		out_string += result+","
+	print out_string
+
 except IOError as e:
 	print e
