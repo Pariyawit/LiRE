@@ -7,10 +7,12 @@ $id = trim($_POST['id']);
 if($id == 'admin'){
 	$result = 'true';
 	$_SESSION['UserID'] = 'admin';
+	$_SESSION['timeout'] = time();
 }else{
 	$result = userCheck($id);
 	if($result == 'true'){
 		$_SESSION['UserID'] = $id;
+		$_SESSION['timeout'] = time();
 	}
 }
 

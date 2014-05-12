@@ -9,8 +9,18 @@ if (session_status() === PHP_SESSION_NONE){
 if(!class_exists('Session')) {
     include 'BaseXClient.php';
 }
+#if user not login
 if(!isset($_SESSION['UserID'])){
     $_SESSION['UserID'] = false;
+    $_SESSION['timeout'] = time();
+}else if($_SESSION['UserID']==false){
+    $_SESSION['timeout'] = time();
+}
+#user login, check session timeout
+else if ($_SESSION['timeout'] + 10 * 60 < time()) {
+    $_SESSION['UserID'] = false;
+    header("Location: index.php");
+    die();
 }
 ?>
 
