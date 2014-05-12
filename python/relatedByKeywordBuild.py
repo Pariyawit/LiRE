@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 #this python code make relatedBook.xml, relatedMatrix.txt
-#very time consuming, run more that an hour
+#very time consuming, run more than an hour
 import BaseXClient
 import numpy
 import Queue

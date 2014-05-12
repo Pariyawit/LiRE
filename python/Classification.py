@@ -64,3 +64,16 @@ def classtrim(cls):
 	#print "notrim" + cls
 	return ValueError
 
+def getNoticekohaInCategory(cls):
+	session = BaseXClient.Session('localhost',1984,'admin','admin')
+	session.execute("open bookref")
+	# run query on database, get books that have borrowed
+	findNoticekoha = '''for $book in Document/book
+						where $book/category = "'''+cls+'''"
+						return $book/noticekoha/text()'''
+	query_noticekoha = session.query(findNoticekoha)
+
+	results = []
+	for typecode, noticekoha in query_noticekoha.iter():
+		results.append(noticekoha)
+	return results

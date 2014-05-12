@@ -1,9 +1,11 @@
 # -*- coding: UTF-8 -*-
 #provide recommend book from matrix multipication
 import BaseXClient
+from Classification import getNoticekohaInCategory
 import numpy
 import Queue
-from array import *
+from season_score import cal_season_score
+#from array import *
 
 import os
 if (os.path.isdir("../database/")):
@@ -15,9 +17,13 @@ import sys
 
 try:
 	codebarrelecteur = sys.argv[1]
-except:
-	print "UserID not found"
-	exit()
+	if len(sys.argv) == 3:
+		category = sys.argv[2]
+		category_books = getNoticekohaInCategory(category)
+	#codebarrelecteur = "201321805"
+except IOError as e:
+	print e
+	sys.exit(0)
 
 try:
 	session = BaseXClient.Session('localhost',1984,'admin','admin')
@@ -25,13 +31,18 @@ try:
 	# run query on database, get books that have borrowed
 	findref = '''for $x in historique/transaction
 					where $x/codebarrelecteur="'''+codebarrelecteur+'''"
-					return $x/noticekoha/text()'''
+					return concat($x/noticekoha/text()," ",$x/date/text())'''
 
 	query_ref = session.query(findref)
 	
 	loan_history = set()
+	loan_date = dict()
 	for typecode, out in query_ref.iter():
-		loan_history.add(out)
+		buff = out.split(" ")
+		loan_history.add(buff[0])
+		if buff[0] not in loan_date:
+			loan_date[buff[0]] = ""
+		loan_date[buff[0]] = buff[1]
 
 	key_noticekoha = dict()
 	noticekoha_key = dict()
@@ -44,11 +55,12 @@ try:
 
 	user_matrix = []
 	usecols = []
-	for book in loan_history:
-		if str(book) in noticekoha_key:
-			matrix_ref = int(noticekoha_key[str(book)])
+	for noticekoha in loan_history:
+		if str(noticekoha) in noticekoha_key:
+			matrix_ref = int(noticekoha_key[str(noticekoha)])
 			usecols.append(matrix_ref)
-			user_matrix.append(1)
+			score = cal_season_score(loan_date[str(noticekoha)])
+			user_matrix.append(score)
 
 	#get relatedMatrix only column of book that the user have borrowed
 	relatedMatrix = numpy.loadtxt(path+"relatedMatrix.txt",delimiter=",",dtype="int32",usecols=usecols)
@@ -62,6 +74,8 @@ try:
 	for score in numpy.nditer(resultMatrix):
 		str_i = str(i)
 		if(key_noticekoha[str_i] not in loan_history):
+			if (len(sys.argv) == 3 and key_noticekoha[str_i] not in category_books):
+				continue
 			item = (score,key_noticekoha[str_i])
 			try:
 				resultQueue.put_nowait(item)
@@ -78,6 +92,7 @@ try:
 		tmp = resultQueue.get()
 		resultList.append(tmp[1])
 
+	resultList.reverse()
 
 	out_string = ""
 	for result in resultList:
@@ -86,3 +101,5 @@ try:
 
 except IOError as e:
 	print e
+	print "ERROR"
+	sys.exit(0)
