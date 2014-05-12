@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
 
 import BaseXClient
-import xml.dom.minidom as xmldom
 import Classification
 from array import *
 from collections import defaultdict
