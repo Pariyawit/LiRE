@@ -2,7 +2,7 @@
 import csv
 import sys
 
-#find missing lecteur
+#find missing cardnumber, users that have borrowed some books, but don't have card number in  old_lecteur_brest
 
 lecteur = set()
 

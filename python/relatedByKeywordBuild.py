@@ -1,4 +1,6 @@
 # -*- coding: UTF-8 -*-
+#this python code make relatedBook.xml, relatedMatrix.txt
+#very time consuming, run more that an hour
 import BaseXClient
 import numpy
 import Queue
@@ -50,11 +52,7 @@ print "i = ",i
 print 'keyword :',len(keyword_ref)
 print 'book :',len(book_ref)
 
-#table = [[0 for x in xrange(i)] for x in xrange(i)]
-
 table = numpy.array([[0]*i]*i)
-#table2 = numpy.array([[0]*i]*i)
-
 print "calculate"
 try:
 	#create session
@@ -89,8 +87,7 @@ with open(path+"book_keyref.txt","w") as f:
 
 print "Calculating table x table.T..."
 table = table.dot(table.T)
-#print "calculating the second time"
-#table = table.dot(table.T)
+
 #result is matrix of book x book which [i][j] is number of common keyword of book i and book j
 print "saving matrix"
 numpy.savetxt(path+"relatedMatrix.txt",table,fmt="%d",delimiter=",",newline="\n",header=str(table.shape))
@@ -98,7 +95,6 @@ numpy.savetxt(path+"relatedMatrix.txt",table,fmt="%d",delimiter=",",newline="\n"
 print "pushing top 10"
 relatedBookResults = dict()
 for noticekoha_row, ref_row in book_ref.iteritems():
-	#print noticekoha_row,ref_row
 	relatedBookResults[noticekoha_row]=Queue.PriorityQueue(maxsize=10)
 	for noticekoha_col, ref_col in book_ref.iteritems():
 		if(noticekoha_col!=noticekoha_row):
@@ -118,13 +114,10 @@ for noticekoha, book_ref in relatedBookResults.iteritems():
 	book = ElementTree.SubElement(relatedBook,"book")
 	book.set('noticekoha',str(noticekoha))
 	while (book_ref.qsize() > 0):
-		#print table[ref_row][ref_col],ref_row,ref_col
 		tmp = book_ref.get()
 		relatedTo = ElementTree.SubElement(book,"relatedTo")
 		relatedTo.set('score',str(tmp[0]))
 		relatedTo.text = str(tmp[1])
-#free memory of table
-#table = None
 
 tree = ElementTree.ElementTree(relatedBook)
 
@@ -133,7 +126,7 @@ tree.write(path+'relatedBook.xml',encoding="UTF-8", xml_declaration=True)
 
 xmlstr = ElementTree.tostring(tree.getroot(), encoding='utf8', method='xml')
 session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
-# create empty database
+# create relatedBook database
 session.execute("create db relatedBook")
 session.add("relatedBook.xml", xmlstr)
 session.close()
@@ -143,6 +136,5 @@ pretty_xml_as_string = xml.toprettyxml()
 
 session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 session.add("relatedBook", pretty_xml_as_string)
-#print pretty_xml_as_string
 with open(path+"keywordXML_syn_pretty.xml","w") as f:
 	f.write(pretty_xml_as_string.encode('utf8'));
