@@ -12,9 +12,9 @@ import xml.dom.minidom as xmldom
 
 import os
 if (os.path.isdir("../database/")):
-	outFile = "../database/keywordXML_syn.xml"
+	path = "../database/"
 else:
-	outFile = "database/keywordXML_syn.xml"
+	path = "database/"
 
 en_stem = nltk.stem.snowball.SnowballStemmer("english")
 fr_stem = nltk.stem.snowball.SnowballStemmer("french")
@@ -225,14 +225,14 @@ try:
 	session.add("keywordXML_syn.xml", xml)
 	session.close()
 
-	with open(outFile,"w") as f:
+	with open(path+"keywordXML_syn.xml","w") as f:
 		f.write(xml.encode('utf8'));
 
 	# -----------!!!-------------MEMORY ERROR after this...-----------!!!-------------
-	xml = xmldom.parse(outFile)
+	xml = xmldom.parse(path+"keywordXML_syn.xml")
 	pretty_xml_as_string = xml.toprettyxml()
 	#print pretty_xml_as_string
-	with open(outFile,"w") as f:
+	with open(path+"keywordXML_syn.xml","w") as f:
 		f.write(pretty_xml_as_string.encode('utf8'));
 
 	#print classifications
