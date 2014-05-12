@@ -47,6 +47,8 @@ def en_synonyms(word):
 	#print word,len(synonyms)
 	return synonyms
 
+
+
 #another method is used for french word becuase ntlk doesn't have french dictionary
 #open database for french wordnet
 session_wordnet = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
