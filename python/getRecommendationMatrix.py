@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+#provide recommend book from matrix multipication
 import BaseXClient
 import numpy
 import Queue
@@ -12,10 +13,8 @@ else:
 
 import sys
 
-#MUST comment all 'print' except the last one for php result
 try:
 	codebarrelecteur = sys.argv[1]
-	#codebarrelecteur="201221459"
 except:
 	print "UserID not found"
 	exit()
@@ -23,7 +22,6 @@ except:
 try:
 	session = BaseXClient.Session('localhost',1984,'admin','admin')
 	session.execute("open historique")
-	#print session.info()
 	# run query on database, get books that have borrowed
 	findref = '''for $x in historique/transaction
 					where $x/codebarrelecteur="'''+codebarrelecteur+'''"
@@ -34,7 +32,6 @@ try:
 	loan_history = set()
 	for typecode, out in query_ref.iter():
 		loan_history.add(out)
-	#print loan_history
 
 	key_noticekoha = dict()
 	noticekoha_key = dict()
@@ -42,7 +39,6 @@ try:
 		for line in f:
 			tmp = line.split(',')
 			tmp[1] = tmp[1].strip()
-			##print "--",tmp[0],"--",tmp[1].strip()
 			noticekoha_key[tmp[0]] = tmp[1]
 			key_noticekoha[tmp[1]] = tmp[0]
 
@@ -61,7 +57,6 @@ try:
 	user_matrix = numpy.array(user_matrix)
 	resultMatrix = relatedMatrix.dot(user_matrix)
 	
-	#print "pushing top 10"
 	resultQueue=Queue.PriorityQueue(maxsize=10)
 	i = 0
 	for score in numpy.nditer(resultMatrix):
@@ -81,10 +76,9 @@ try:
 	resultList = []
 	while (resultQueue.qsize() > 0):
 		tmp = resultQueue.get()
-		#print tmp
 		resultList.append(tmp[1])
 
-	#print resultList
+
 	out_string = ""
 	for result in resultList:
 		out_string += result+","

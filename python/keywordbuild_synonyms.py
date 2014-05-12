@@ -1,4 +1,6 @@
 # -*- coding: UTF-8 -*-
+#this code make keywordXML_syn.xml which extract keyword from each book
+#very time consuming, run more that an hour
 import BaseXClient
 import nltk
 import string
