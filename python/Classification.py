@@ -5,14 +5,19 @@ from array import *
 from collections import defaultdict
 
 
+# This method returns true if the input string is in the right format for a subcategory
+# for example, cls = '10.1'
 def isSubcat(cls):
 	if(len(cls)>2): return True
 	else: return False
 
+# This method returns true if the input string is in the right format for a category
+# for example, cls = '10'
 def isCat(cls):
 	if(len(cls)==2): return True
 	else: return False
 
+# This method returns a category list derived from classification schema.
 def getclassificationrule():
 	f = open("../database/classification.txt","r")
 	categorylist = []
