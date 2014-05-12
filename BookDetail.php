@@ -95,7 +95,8 @@
 							$i=0;
 							foreach ($related_books as $book_ref) {
 								if($book_ref != ($_GET['ref'])){
-									echo '<tr><td><a href="bookdetail.php?ref='.$book_ref.'"><div>'.getBookName($book_ref).'</div></a></td></tr>';
+									$CodeName = getBookCodeName($book_ref);
+									echo '<tr><td>'.$CodeName[0].'</td><td><a href="bookdetail.php?ref='.$book_ref.'"><div>'.$CodeName[1].'</div></a></td></tr>';
 									$i = $i+1;
 									if($i>=10)break;
 								}
