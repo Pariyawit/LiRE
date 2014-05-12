@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 import BaseXClient
-import Classification
 import numpy
 import Queue
 from array import *
@@ -14,9 +13,12 @@ else:
 import sys
 
 #MUST comment all 'print' except the last one for php result
-
-codebarrelecteur = sys.argv[1]
-#codebarrelecteur="201221459"
+try:
+	codebarrelecteur = sys.argv[1]
+	#codebarrelecteur="201221459"
+except:
+	print "UserID not found"
+	exit()
 
 try:
 	session = BaseXClient.Session('localhost',1984,'admin','admin')

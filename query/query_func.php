@@ -283,20 +283,22 @@ function getRelatedBook($noticekoha){
 	}
 }
 
-function getBookName($noticekoha){
+function getBookCodeName($noticekoha){
 	try {
 		$input = 'for $book in Document/book
 					where $book/noticekoha/text() = "'.$noticekoha.'"
-					return $book/title/text()';
+					return (data($book/@class),$book/title/text())';
 		if(!isset($session)){
 			$session = new Session("localhost", "1984", "admin", "admin");
 		}
 		$session->execute('OPEN bookref');
 		$query = $session->query($input);
-		$result = $query->next();
+		$results = array();
+		array_push($results,$query->next());
+		array_push($results,$query->next());
 		// close query instance
 		$query->close();
-		return $result;
+		return $results;
 
 	} catch (Exception $e) {
 		// print exception

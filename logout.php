@@ -17,8 +17,9 @@ $_SESSION['UserID'] = false;
 
 <?php 
 include 'footer.php';
+$path = realpath(dirname(__FILE__));
 ?>
 
 <script type="text/javascript">
-	setTimeout("window.location = '<?php echo $_SERVER['HTTP_REFERER'] ?>'", 2000);
+	setTimeout("window.location.href = 'index.php'", 2000);
 </script>
