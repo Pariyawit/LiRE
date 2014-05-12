@@ -74,7 +74,7 @@ def getNoticekohaInCategory(cls):
 	session.execute("open bookref")
 	# run query on database, get books that have borrowed
 	findNoticekoha = '''for $book in Document/book
-						where $book/category = "'''+cls+'''"
+						where starts-with($book/category,"'''+cls+'''")
 						return $book/noticekoha/text()'''
 	query_noticekoha = session.query(findNoticekoha)
 

@@ -5,9 +5,7 @@
 	#set_time_limit(0);
 	$results = shell_exec('python python/getRecommendationMatrix.py '.$_SESSION['UserID']);
 	#var_dump($results);
-	if($results=="UserID not found"){
-		
-	}
+
 	$recom_books = explode(",",$results);
 	#var_dump($recom_books)
 ?>
@@ -18,20 +16,30 @@
 
 			<div class="jumbotron">
 				<h1>Recommendation</h1>
-				<h2>for <?php echo $_SESSION['UserID'] ?></h2>
+				<h2>for <?php echo $_SESSION['UserID'] ?> based on your borrowing history</h2>
 				<br>
 			</div>
 			<div class="modal"><!-- Place at bottom of page --></div>
 
 			<div class="row">
-				<table class="table table-condensed">
-						<thead><tr><th>Code</th><th>Book Title</th></tr></thead>
+				<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="col-sm-2" style="text-align:center">Code</th>
+								<th class="col-sm-10" style="text-align:center">Book Title</th>
+							</tr>
+						</thead>
 						<tbody>
 						<?php
 							$i=0;
 							foreach ($recom_books as $book_ref) {
 								$CodeName = getBookCodeName($book_ref);
-								echo '<tr><td>'.$CodeName[0].'</td><td><a href="bookdetail.php?ref='.$book_ref.'"><div>'.$CodeName[1].'</div></a></td></tr>';
+								echo '<tr>';
+								echo '<td style="padding-left:5%;">'.$CodeName[0].'</td>';
+								echo '<td style="padding-left:5%;">';
+								echo '<a href="bookdetail.php?ref='.$book_ref.'"><div>'.$CodeName[1].'</div></a>';
+								echo '</td>';
+								echo '</tr>';
 								$i = $i+1;
 								if($i>=10)break;
 							}

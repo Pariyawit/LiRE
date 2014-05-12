@@ -75,8 +75,10 @@ try:
 		str_i = str(i)
 		if(key_noticekoha[str_i] not in loan_history):
 			if (len(sys.argv) == 3 and key_noticekoha[str_i] not in category_books):
+				i=i+1
 				continue
 			item = (score,key_noticekoha[str_i])
+			#print item
 			try:
 				resultQueue.put_nowait(item)
 			except:
