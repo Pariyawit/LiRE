@@ -11,12 +11,14 @@ else:
 	outFile = "database/bookref.xml"
 
 try:
+	# Set up an connection with BaseX
 	session = BaseXClient.Session('localhost',1984,'admin','admin')
 	session1 = BaseXClient.Session('localhost',1984,'admin','admin')
 	session.execute("open extraction")
 	session1.execute("create db bookref")
 	print session.info()
-	# run query on database, get all books
+
+	# run query on database to get all books
 	findref = '''declare namespace marcxml = "http://www.loc.gov/MARC21/slim";
  				for $record in //marcxml:record
 				where $record/marcxml:datafield[@tag="995"]/marcxml:subfield[@code="e"]="BSTB"
@@ -30,10 +32,8 @@ try:
 	query_ref = session.query(findref)
 	buff = []
 
-
 	xml = '<Document>'
 	for typecode, ref in query_ref.iter():
-		#print ref.encode('utf8')
 		if(ref=='$'):
 			classes = buff[0:buff.index('#')]
 			bookclass = ""
@@ -67,11 +67,6 @@ try:
 						continue
 				except ValueError as ve:
 					continue
-			else:
-				print classes
-			#print bookclass.encode('utf8')
-
-			#print buff
 			buff = []
 			xml += '<book class="'+str(bookclass.encode('utf8'))+'">'
 			xml += '<title>'+str(title.encode('utf8'))+'</title>'
@@ -82,16 +77,15 @@ try:
 			buff.append(ref);
 	
 	xml += '</Document>'
-
 	session.close()
-	#print xml
+
+	# Write String xml into database (.xml file).
 	session1.add("bookref.xml", xml)
-	#print xml
 	xml = xmldom.parseString(xml)
 	pretty_xml_as_string = xml.toprettyxml()
-	#print pretty_xml_as_string.encode('utf8')
 	with open(outFile,"w") as f:
 		f.write(pretty_xml_as_string.encode('utf8'));
 	session1.close()
+
 except IOError as e:
 	print e
