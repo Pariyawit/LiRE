@@ -3,7 +3,7 @@
 	include 'query/query_func.php';
 	$current_page = 'Recommendation';
 	#set_time_limit(0);
-	$results = shell_exec('python python/getRecommendationMatrix.py '.$_SESSION['UserID']);
+	$results = shell_exec('python python/getRecommendation.py '.$_SESSION['UserID']);
 	#var_dump($results);
 
 	$recom_books = explode(",",$results);

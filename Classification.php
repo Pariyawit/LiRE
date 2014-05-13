@@ -76,7 +76,7 @@
 						</thead>
 						<tbody>
 						<?php
-							$results = shell_exec('python python/getRecommendationMatrix.py '.$_SESSION['UserID'].' '.$_GET['seach_class']);
+							$results = shell_exec('python python/getRecommendation.py '.$_SESSION['UserID'].' '.$_GET['seach_class']);
 							$recom_books = explode(",",$results);
 							foreach ($recom_books as $book_ref) {
 								$CodeName = getBookCodeName($book_ref);

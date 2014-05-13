@@ -36,13 +36,19 @@ function connect_db(){
 			$file = $path."/toploan.xml";
 			$session->execute('CREATE DB toploan '.$file);
 
-			exec('python python/keywordbuild.py');
-			$file = $path."/keywordXML.xml";
-			$session->execute('CREATE DB keyword '.$file);
-
 			exec('python python/bookrefBuild.py');
 			$file = $path."/bookref.xml";
 			$session->execute('CREATE DB bookref '.$file);
+
+			exec('python python/keywordBuild.py');
+			$file = $path."/keywordXML.xml";
+			$session->execute('CREATE DB keyword '.$file);
+
+			exec('python python/keywordCount.py');
+
+			exec('python python/relatedBookBuild.py');
+			$file = $path."/relatedBook.xml";
+			$session->execute('CREATE DB relatedBook '.$file);
 
 			exec('python python/loanfreq.py');
 			$file = $path."/loanfreqtable.xml";

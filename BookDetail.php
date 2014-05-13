@@ -89,7 +89,10 @@
 			</div> <!-- row -->
 			<div class="row">
 				<table class="table table-condensed">
-						<thead><tr><th>Some 'maybe' Related Book</th></tr></thead>
+						<thead><tr>
+							<th>Code</th>
+							<th>Some 'maybe' Related Book</th>
+						</tr></thead>
 						<tbody>
 						<?php
 							$i=0;

@@ -111,11 +111,11 @@ try:
 	keywordXML = ElementTree.Element("keywordXML")
 	books = dict()
 	#get each book
-	book_count = 0
+	book_count = 1
 	for typecode, output in query_ref.iter():
 		if(output=='$'):
 			print ''
-			print '['+str(book_count)+'/19628]'
+			print '['+str(book_count)+'/10388]'
 			book_count = book_count+1
 			print buff
 			#print '---------------------------'
