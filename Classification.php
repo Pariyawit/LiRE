@@ -47,8 +47,8 @@
 					<table class="table table-bordered table-condensed table-hover">
 						<thead>
 							<tr>
-								<th class="col-sm-10" style="text-align:center">Top 5 Most Borrowed Books</th>
 								<th class="col-sm-2" style="text-align:center">Time(s)</th>
+								<th class="col-sm-10" style="text-align:center">Top 5 Most Borrowed Books</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -56,10 +56,9 @@
 							$top_loans = top_loan($_GET['seach_class']);
 							foreach ($top_loans as $top_loan) {
 								echo "<tr>";
-								echo "<td>";
-								echo '<a href="bookdetail.php?ref='.$top_loan[0].'" style="text-align:center"><div>';
-								echo $top_loan[2]."</div></a></td>";
 								echo '<td style="text-align:center">'.$top_loan[1].'</td>';
+								echo '<td><a href="bookdetail.php?ref='.$top_loan[0].'" style="text-align:center"><div>';
+								echo $top_loan[2]."</div></a></td>";
 								echo "</tr>";
 						}
 						?>

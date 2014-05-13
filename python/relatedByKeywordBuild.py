@@ -15,7 +15,7 @@ else:
 keyword_ref = dict()
 lower_bound = 6
 i=0
-with open(path+'keywordcount_syn.txt',"r") as f:
+with open(path+'keywordCount.txt',"r") as f:
 	for line in f:
 		keyword = line.split(',')
 		keyword_ref[keyword[0]] = i
@@ -58,11 +58,11 @@ try:
 	#create session
 	session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 	# create empty database
-	session.execute("open keywordXML_syn")
+	session.execute("open keywordXML")
 	print session.info()
 	
 	# run query on database, get all books noticekoha
-	findbookref = '''for $keyword in /keywordXML/classification/book
+	findbookref = '''for $keyword in /keywordXML/category/book
 						return (data($keyword/@noticekoha),$keyword/keyword/text())'''
 	query_bookref = session.query(findbookref)
 
@@ -136,5 +136,5 @@ pretty_xml_as_string = xml.toprettyxml()
 
 session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 session.add("relatedBook", pretty_xml_as_string)
-with open(path+"keywordXML_syn_pretty.xml","w") as f:
+with open(path+"keywordXML.xml","w") as f:
 	f.write(pretty_xml_as_string.encode('utf8'));
