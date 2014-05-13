@@ -11,7 +11,7 @@ from collections import defaultdict
 try:
 	session1 = BaseXClient.Session('localhost',1984,'admin','admin')
 	session2 = BaseXClient.Session('localhost',1984,'admin','admin')
-	session1.execute('open keyword')
+	session1.execute('open keywordXML')
 	session2.execute('create db distinctness')
 
 	categorylist = Classification.getclassificationrule()
@@ -34,8 +34,8 @@ try:
 		kf[cat] = defaultdict(int)
 		if(Classification.isSubcat(cat)):
 			parentcat = cattree.getParent(cat)
-			findcount = '''for $class in //keywordXML/*
-						where data($class/@category)="'''+cat+'''"
+			findcount = '''for $class in /keywordXML/category
+						where data($class/@code)="'''+cat+'''"
 						return $class/book/keyword/text()'''
 			querycount = session1.query(findcount)
 			for typecode,ref in querycount.iter():
@@ -61,7 +61,7 @@ try:
 		xml += '<category code="'+cat+'">'
 		for ref in kf[cat]:
 			if(kf[cat][ref] == 0): continue
-			print cat,ref,float(kf[cat][ref]),"-",float(siblingcount[cat]),"-",float(siblingkeyword[cat][ref]),"-",math.log(float(siblingcount[cat])/float(siblingkeyword[cat][ref]))
+			#print cat,ref,float(kf[cat][ref]),"-",float(siblingcount[cat]),"-",float(siblingkeyword[cat][ref]),"-",math.log(float(siblingcount[cat])/float(siblingkeyword[cat][ref]))
 			distinctness[cat][ref] = float(kf[cat][ref]) * math.log(float(siblingcount[cat])/float(siblingkeyword[cat][ref]))
 			xml += '<keyword distinctness="'+str(distinctness[cat][ref]).encode('utf8')+'">'+str(ref)+'</keyword>'
 		
@@ -71,6 +71,8 @@ try:
 	session1.close()
 
 	session2.add('distinctnesstable.xml',xml)
+	with open('../database/distinctnesstable.xml','w') as f:
+		f.write(xml.encode('utf8'))
 	xml = xmldom.parseString(xml)
 	pretty_xml_as_string = xml.toprettyxml()
 
