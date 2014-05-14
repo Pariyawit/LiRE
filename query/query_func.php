@@ -254,6 +254,7 @@ function getRelatedBook($noticekoha){
 		$input = 'for $book in relatedBook/book
 					where data($book/@noticekoha)="'.$noticekoha.'"
 					return for $relate in $book/relatedTo
+					where data($relate/@score)>1.0
 					order by $relate/@score descending
 					return $relate/text()';
 		if(!isset($session)){

@@ -66,6 +66,31 @@
 					</table>
 				<?php endif ?>
 
+				<?php if((!isset($_GET['seach_class'])) and $_SESSION['UserID']):?>
+					<table class="table table-bordered table-condensed table-hover">
+						<thead>
+							<tr>
+								<th class="col-sm-2" style="text-align:center">Code</th>
+								<th class="col-sm-10" style="text-align:center">Recommendation for you</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php
+							$results = shell_exec('python python/getRecommendation.py '.$_SESSION['UserID']);
+							$recom_books = explode(",",$results);
+							foreach ($recom_books as $book_ref) {
+								$CodeName = getBookCodeName($book_ref);
+								echo '<tr>';
+								echo '<td style="padding-left:5%;">'.$CodeName[0].'</td>';
+								echo '<td style="padding-left:5%;"><a href="bookdetail.php?ref='.$book_ref.'"><div>'.$CodeName[1].'</div></a></td></tr>';
+								$i = $i+1;
+								if($i>=10)break;
+							}
+						?>
+						</tbody>
+					</table>
+				<?php endif ?>
+
 				<?php if(isset($_GET['seach_class']) and $_SESSION['UserID']):?>
 					<table class="table table-bordered table-condensed table-hover">
 						<thead>

@@ -91,7 +91,7 @@
 				<table class="table table-condensed">
 						<thead><tr>
 							<th>Code</th>
-							<th>Related Book</th>
+							<th>Some books you may like<th>
 						</tr></thead>
 						<tbody>
 						<?php

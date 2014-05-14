@@ -4,9 +4,9 @@ if($_SESSION['UserID'] == false){
 	$menus = array('Home','Classification');
 }
 else{
-	$menus = array('Home','Classification','History','Recommendation');
+	$menus = array('Home','Classification','History');
 }
-$files = array('index','classification','history','Recommendation')
+$files = array('index','classification','history')
 
 ?>
 
