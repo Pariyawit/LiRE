@@ -12,6 +12,26 @@ if (os.path.isdir("../database/")):
 else:
 	path = "database/"
 
+cat = ['00','01','02','03','04','05','06','07','08','09','10','11','12']
+
+distinctnesstable = dict()
+session_distinctness = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
+# create empty database
+session_distinctness.execute("open distinctness")
+
+for code in cat:
+	distinctnesstable[code] = dict()
+	findDistinctnessValue = '''for $category in /Document/category
+								where data($category/@code)="'''+code+'''"
+								return for $keyword in $category/keyword
+								return concat($keyword/text()," ",data($keyword/@distinctness))'''	
+	query_DistinctnessValue = session_distinctness.query(findDistinctnessValue)
+	for typecode, out in query_DistinctnessValue.iter():
+		buff = out.split(" ")
+		word = buff[0]
+		distinctvalue = buff[1]
+		distinctnesstable[code][word] = distinctvalue
+
 keyword_ref = dict()
 lower_bound = 6
 i=0
@@ -40,7 +60,7 @@ try:
 	book_ref = dict()
 	i=0
 	for typecode, noticekoha in query_bookref.iter():
-		if(noticekoha not in book_ref):
+		if((noticekoha not in book_ref) and (noticekoha.isdigit())):
 			book_ref[noticekoha] = i
 			i+=1
 
@@ -52,7 +72,7 @@ print "i = ",i
 print 'keyword :',len(keyword_ref)
 print 'book :',len(book_ref)
 
-table = numpy.array([[0]*i]*i)
+table = numpy.array([[0]*i]*i,dtype=numpy.float)
 print "calculate"
 try:
 	#create session
@@ -61,26 +81,31 @@ try:
 	session.execute("open keywordXML")
 	print session.info()
 	
-	# run query on database, get all books noticekoha
-	findbookref = '''for $keyword in /keywordXML/category/book
-						return (data($keyword/@noticekoha),$keyword/keyword/text())'''
+	# run query on database, get all books'noticekoha
+	findbookref = '''for $keyword in /keywordXML/category/book/keyword
+					return concat(data($keyword/../../@code)," ",data($keyword/../@noticekoha)," ",$keyword/text())'''
 	query_bookref = session.query(findbookref)
 
+	#get distinctnessvalue to each element in matrix. if cannot find, the default is 1.0
 	for typecode, out in query_bookref.iter():
-		if(out.isdigit()):
-			noticekoha = out
-		else:
-			if (out.encode('UTF-8') in keyword_ref):
-				if out.encode('UTF-8') not in keyword_ref :
-					print "keyword not in"
-				if noticekoha not in book_ref:
-					print "noticekoha not in"
-					print "==",noticekoha
-					continue
-				table[book_ref[noticekoha]][keyword_ref[out.encode('UTF-8')]] = 1
+		buff = out.split(" ")
+		code = buff[0]
+		code = code[0:2]
+		noticekoha = buff[1]
+		word = buff[2]
+		if (word in keyword_ref):
+			if noticekoha not in book_ref:
+				continue
+			if word in distinctnesstable[code]:
+				table[book_ref[noticekoha]][keyword_ref[word]] = distinctnesstable[code][word]
+			#	print "----->",table[book_ref[noticekoha]][keyword_ref[word]] 
+			else: 
+				table[book_ref[noticekoha]][keyword_ref[word]] = 1.0
+			#print "----->",table[book_ref[noticekoha]][keyword_ref[word]] 
 except IOError as e:
 	print e
 
+print "open book_keyref"
 with open(path+"book_keyref.txt","w") as f:
 	for noticekoha, ref in book_ref.iteritems():
 		f.write(str(noticekoha)+","+str(ref)+"\n")
@@ -90,7 +115,7 @@ table = table.dot(table.T)
 
 #result is matrix of book x book which [i][j] is number of common keyword of book i and book j
 print "saving matrix"
-numpy.savetxt(path+"relatedMatrix.txt",table,fmt="%d",delimiter=",",newline="\n",header=str(table.shape))
+numpy.savetxt(path+"relatedMatrix.txt",table,fmt="%.4f",delimiter=",",newline="\n",header=str(table.shape))
 
 print "pushing top 10"
 relatedBookResults = dict()

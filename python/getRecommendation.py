@@ -63,7 +63,7 @@ try:
 			user_matrix.append(score)
 
 	#get relatedMatrix only column of book that the user have borrowed
-	relatedMatrix = numpy.loadtxt(path+"relatedMatrix.txt",delimiter=",",dtype="int32",usecols=usecols)
+	relatedMatrix = numpy.loadtxt(path+"relatedMatrix.txt",delimiter=",",usecols=usecols)
 	dimension = relatedMatrix.shape
 
 	user_matrix = numpy.array(user_matrix)

@@ -34,6 +34,8 @@ try:
 	f = open(path+"keywordCount.txt",'wb')
 	for w in sorted(keywords, key=keywords.get, reverse=True):
 		#print w.encode('UTF-8'),',',keywords[w]
+		if (w.encode('UTF-8').isdigit()):
+			continue
 		s = w.encode('UTF-8')+','+str(keywords[w])+'\n'
 		f.write(s)
 

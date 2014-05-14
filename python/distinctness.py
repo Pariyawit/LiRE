@@ -62,7 +62,7 @@ try:
 		for ref in kf[cat]:
 			if(kf[cat][ref] == 0): continue
 			#print cat,ref,float(kf[cat][ref]),"-",float(siblingcount[cat]),"-",float(siblingkeyword[cat][ref]),"-",math.log(float(siblingcount[cat])/float(siblingkeyword[cat][ref]))
-			distinctness[cat][ref] = float(kf[cat][ref]) * math.log(float(siblingcount[cat])/float(siblingkeyword[cat][ref]))
+			distinctness[cat][ref] = 1+(float(kf[cat][ref]) * math.log(float(siblingcount[cat])/float(siblingkeyword[cat][ref])))
 			xml += '<keyword distinctness="'+str(distinctness[cat][ref]).encode('utf8')+'">'+str(ref)+'</keyword>'
 		
 		xml += '</category>'
@@ -71,6 +71,7 @@ try:
 	session1.close()
 
 	session2.add('distinctnesstable.xml',xml)
+	session2.close()
 	with open('../database/distinctnesstable.xml','w') as f:
 		f.write(xml.encode('utf8'))
 	xml = xmldom.parseString(xml)
@@ -79,6 +80,5 @@ try:
 	with open('../database/distinctnesstable.xml','w') as f:
 		f.write(pretty_xml_as_string.encode('utf8'))
 
-	session2.close()
 except IOError as e:
 	print e
