@@ -46,15 +46,15 @@ function connect_db(){
 
 			exec('python python/keywordCount.py');
 
+			exec('python python/distinctness.py');
+			$file = $path."/distinctnesstable.xml";
+			$session->execute('CREATE DB distinctness '.$file);
+
 			exec('python python/relatedBookBuild.py');
 			$file = $path."/relatedBook.xml";
 			$session->execute('CREATE DB relatedBook '.$file);
 
-			exec('python python/loanfreq.py');
-			$file = $path."/loanfreqtable.xml";
-			$session->execute('CREATE DB loanfreq '.$file);
-			$file = $path."/loankeywordfreqtable.xml";
-			$session->execute('CREATE DB loankeyfreq '.$file);
+			exec('python python/season.py');
 
 			print $session->info();		
 			header('Location: ' . $_SERVER['HTTP_REFERER']);

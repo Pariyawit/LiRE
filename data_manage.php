@@ -15,18 +15,16 @@
 				<h3>Create and Open Database from folder database/<br>
 				 	Run python from python/ to make .xml file<br>
 					This takes long time before finish</h3><br>
-				<p>/extraction_brest.xml</p>
-				<p>/historique.xml</p>
-				<p>/old_lecteur_brest.xml</p>
-				<p>/wordnetfrench.xml</p>
-				<p><i>run toploanBuild.py</i><br>/toploan.xml</p>
-				<p><i>run bookrefBuild.py</i><br>/bookref.xml</p>
-				<p><i>run keywordBuild.py</i><br>/keywordXML.xml</p>
+				<p>/extraction_brest_edit.xml => 'extraction'</p>
+				<p>/historique.xml => 'historique'</p>
+				<p>/old_lecteur_brest.xml => 'lecteur'</p>
+				<p>/wordnetfrench.xml => 'wordnetfrench'</p>
+				<p><i>run toploanBuild.py</i><br>/toploan.xml => 'toploan'</p>
+				<p><i>run bookrefBuild.py</i><br>/bookref.xml => 'bookref'</p>
+				<p><i>run keywordBuild.py</i><br>/keywordXML.xml => 'keywordXML'</p>
 				<p><i>run keywordCount.py</i><br></p>
-				<p><i>run relatedBookBuild.py</i><br>/relatedBook.xml<br>/relatedMatrix.txt</p>
-				<p><i>run loanfreq.py</i><br>
-					/loanfreqtable.xml<br>
-					/loankeywordfreqtable.xml</p>
+				<p><i>run distinctness.py</i><br>/distinctnesstable.xml => 'distinctness'</p>
+				<p><i>run relatedBookBuild.py</i><br>/relatedBook.xml => 'relatedBook'<br>/relatedMatrix.txt</p>
 				<p><i>run season.py</i><p>
 				<input type="submit" class="button btn btn-primary" name="create" value="create" />
 				<br>

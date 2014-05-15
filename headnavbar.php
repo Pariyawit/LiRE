@@ -3,6 +3,9 @@
 if($_SESSION['UserID'] == false){
 	$menus = array('Home','Classification');
 }
+else if($_SESSION['UserID'] == 'admin'){
+	$menus = array('Home');
+}
 else{
 	$menus = array('Home','Classification','History');
 }
